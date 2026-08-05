@@ -7,4 +7,6 @@ export default async function ApiTest() {
         .select("*")
 
     console.log(data)
+
+    return 'hello';
 }

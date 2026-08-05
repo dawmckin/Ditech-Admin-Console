@@ -12,6 +12,7 @@ function App() {
 
   const [count, setCount] = useState(0)
 
+  console.log(apiTest);
   return (
     <>
       <section id="center">
