@@ -8,5 +8,5 @@ export default async function ApiTest() {
 
     console.log(data)
 
-    return 'hello';
+    return 'Hello';
 }
