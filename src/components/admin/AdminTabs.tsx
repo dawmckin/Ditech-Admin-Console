@@ -1,73 +1,46 @@
 import { useState } from "react";
-import { ButtonGroup, ToggleButton, Card } from "react-bootstrap";
-// import ButtonGroup from "react-bootstrap/ButtonGroup";
-// import ToggleButton from "react-bootstrap/ToggleButton";
-// import Card from "react-bootstrap/Card";
+import { Card } from "react-bootstrap";
 
-import ChatInput from "./ChatInput";
-import EmployeeReviews from "./EmployeeReviews";
-import AuditLogs from "./AuditLogs";
+import Tabs from "../common/Tabs"
+import ChatInput from "../admin/ChatInput";
+import EmployeeReviews from "../admin/EmployeeReviews";
+import AuditLogs from "../admin/AuditLogs";
 
-type TabType = 'chat' | 'reviews' | 'audit';
+import type { Tab } from "../../types/tab";
+
+type AdminTab = "chat" | "employeeReviews" | "auditLogs";
 
 export default function AdminTabs() {
-    const [activeTab, setActiveTab] = useState<TabType>("chat");
+    const [activeTab, setActiveTab] = useState<AdminTab>('chat');
 
-    const renderTabs = () => {
+    const tabs: Tab[] = [
+        {id: 'chat', label: 'Admin Console'},
+        {id: 'employeeReviews', label: 'Employee Reviews'},
+        {id: 'auditLogs', label: 'Audit Logs'}
+    ]
+
+    const renderTabContent = () => {
         switch(activeTab) {
             case 'chat':
                 return <ChatInput />;
-            case 'reviews':
+            case 'employeeReviews':
                 return <EmployeeReviews />;
-            case 'audit':
+            case 'auditLogs':
                 return <AuditLogs />;
-            
         }
     }
 
     return (
         <>
-            <ButtonGroup className="w-100 mb-3 shadow-sm">
-                <ToggleButton 
-                    id="chat-tab"
-                    type="radio"
-                    variant={activeTab === 'chat' ? 'primary' : 'light'}
-                    name="tabs"
-                    value='chat'
-                    checked={activeTab === 'chat'}
-                    onChange={() => setActiveTab('chat')}
-                >
-                    Admin Chat
-                </ToggleButton>
-
-                <ToggleButton 
-                    id="reviews-tab"
-                    type="radio"
-                    variant={activeTab === 'reviews' ? 'primary' : 'light'}
-                    name="tabs"
-                    value='reviews'
-                    checked={activeTab === 'reviews'}
-                    onChange={() => setActiveTab('reviews')}
-                >
-                    Employee Reviews
-                </ToggleButton>
-
-                <ToggleButton 
-                    id="audit-tab"
-                    type="radio"
-                    variant={activeTab === 'audit' ? 'primary' : 'light'}
-                    name="tabs"
-                    value='audit'
-                    checked={activeTab === 'audit'}
-                    onChange={() => setActiveTab('audit')}
-                >
-                    Audit Logs
-                </ToggleButton>
-            </ButtonGroup>
+            <Tabs 
+                tabs={tabs} 
+                activeTab={activeTab} 
+                onTabChange={(tab) => setActiveTab(tab as AdminTab)}
+            />
 
             <Card className="border-0 shadow-sm rounded-4">
                 <Card.Body className="p-0">
-                    {renderTabs()}
+                    {renderTabContent()}
                 </Card.Body>
             </Card>
         </>
