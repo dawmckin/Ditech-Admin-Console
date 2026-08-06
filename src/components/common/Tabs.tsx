@@ -1,6 +1,6 @@
 import { ButtonGroup, ToggleButton } from "react-bootstrap";
 
-import type { Tab } from "../../types/tab";
+import type { Tab } from "../../types/Tab";
 
 interface TabsProps {
     tabs: Tab[],

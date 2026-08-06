@@ -6,7 +6,7 @@ import ChatInput from "../admin/ChatInput";
 import EmployeeReviews from "../admin/EmployeeReviews";
 import AuditLogs from "../admin/AuditLogs";
 
-import type { Tab } from "../../types/tab";
+import type { Tab } from "../../types/Tab";
 
 type AdminTab = "chat" | "employeeReviews" | "auditLogs";
 

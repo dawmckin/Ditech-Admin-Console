@@ -5,7 +5,7 @@ import Tabs from "../common/Tabs"
 import ReviewDashboard from "./ReviewDashboard";
 import NewReview from "./NewReview";
 
-import type { Tab } from "../../types/tab";
+import type { Tab } from "../../types/Tab";
 
 type SupervisorTab = "reviewDashboard" | "newReview";
 
