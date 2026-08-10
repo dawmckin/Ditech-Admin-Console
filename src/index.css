@@ -144,3 +144,14 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.08);
 }
+
+p.total-score {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+p.review-status {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: red;
+}
