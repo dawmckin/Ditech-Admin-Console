@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabase";
-import type { ReviewCategory } from "../types/reviewPrompt";
+import type { ReviewCategory } from "../types/ReviewPrompt";
 
 export function groupPromptsByCategory(categories: ReviewCategory[]) {
     return categories.reduce((groups, category) =>  {

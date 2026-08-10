@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import ReviewCategoryInputCard from "../common/ReviewCategoryInputCard";
 import { useReviewCategories } from "../../hooks/useReviewCategories";
 import { groupPromptsByCategory } from "../../services/reviewPromptService";
-import type { ReviewCategory, Prompt } from "../../types/reviewPrompt";
+import type { ReviewCategory, Prompt } from "../../types/ReviewPrompt";
 
 export interface EmployeeReviewForm {
     teamMember: string,
