@@ -14,7 +14,6 @@ interface ReviewCategoryInputCardProps {
 
 export default function ReviewCategoryInputCard({category, categoryTitle, prompts, onCardChange}: ReviewCategoryInputCardProps) {
     const [reviewPrompts, setReviewPrompts] = useState<Prompt[]>(prompts);
-    const [changeId, setChangeId] = useState<string>('');
 
     const categoryNotes = reviewPrompts.filter(prompt => prompt.prompt_note).map(prompt => prompt.prompt_note);
 
@@ -23,7 +22,6 @@ export default function ReviewCategoryInputCard({category, categoryTitle, prompt
         field: keyof Prompt,
         value: string | number
     ) => {
-        setChangeId(id);
         setReviewPrompts((prev) =>
             prev.map((prompt) =>
                 prompt.id === Number.parseInt(id)
@@ -38,7 +36,6 @@ export default function ReviewCategoryInputCard({category, categoryTitle, prompt
     }
 
     useEffect(() => {
-        // const cardChange = reviewPrompts.filter(prompt => prompt.id == Number.parseInt(changeId))[0];
         onCardChange(reviewPrompts);
     }, [reviewPrompts]);
 
