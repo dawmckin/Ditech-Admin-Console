@@ -12,8 +12,8 @@ interface ImpersonationCardProps {
 
 export default function ImpersonationCard({onUserSelection}: ImpersonationCardProps) {
     const [impersonationForm, setImpersonationForm] = useState<ImpersonationForm>({
-            userType: '',
-            user: ''
+            userType: 'supervisor',
+            user: 'Dalton McKinney'
         });
 
     useEffect(() => {
@@ -62,7 +62,7 @@ export default function ImpersonationCard({onUserSelection}: ImpersonationCardPr
                                 value={impersonationForm.userType}
                                 onChange={(e) => handleChange(e)}
                             >
-                                <option value=''>Select user type...</option>
+                                <option value='' hidden>Select user type...</option>
                                 <option value='frontline'>Frontline Employee</option>
                                 <option value='supervisor'>Supervisor</option>
                             </Form.Select>
@@ -80,7 +80,7 @@ export default function ImpersonationCard({onUserSelection}: ImpersonationCardPr
                                 onChange={(e) => handleChange(e)}
                                 disabled={impersonationForm.userType === ''}
                             >
-                                <option value=''>Select type first</option>
+                                <option value='' hidden>Select user</option>
                                 <option value='Dalton McKinney'>Dalton McKinney</option>
                                 <option value='Jhonny Test'>Jhonny Test</option>
                             </Form.Select>

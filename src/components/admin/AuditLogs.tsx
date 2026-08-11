@@ -7,6 +7,7 @@ export default function AuditLogs() {
         <div className="p-4">
             <h4>Application Audit Log</h4>
             <small className="text-muted">Track all updates and changes to the application</small>
+            <hr />
             <div className="audit-log-container d-flex flex-column gap-3">
                 <Card className="audit-log-card border-0 shadow-sm rounded-4 p-3">
                     <Card.Body className="p-0">

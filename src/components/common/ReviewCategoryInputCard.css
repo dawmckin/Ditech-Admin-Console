@@ -1,0 +1,42 @@
+.form-check:hover {
+    cursor: pointer;
+}
+
+.review-score .form-check-input {
+    width: 1rem;
+    height: 1rem;
+}
+
+.review-score .form-check-input:hover {
+    cursor: pointer;
+}
+
+.review-score:nth-child(1) .form-check-input,
+.review-score:nth-child(1) .form-check-label {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.review-score:nth-child(2) .form-check-input,
+.review-score:nth-child(2) .form-check-label {
+    border-color: #ffc107;
+    color: #ffc107;
+}
+
+.review-score:nth-child(3) .form-check-input,
+.review-score:nth-child(3) .form-check-label {
+    border-color: #22c55e;
+    color: #22c55e;
+}
+
+.review-score:nth-child(1) .form-check-input:checked {
+    background-color: #dc3545;
+}
+
+.review-score:nth-child(2) .form-check-input:checked {
+    background-color: #ffc107;
+}
+
+.review-score:nth-child(3) .form-check-input:checked {
+    background-color: #22c55e;
+}
