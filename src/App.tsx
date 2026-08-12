@@ -1,9 +1,14 @@
 import AdminDashboard from './pages/AdminDashboard'
 
+import { ToastProvider } from './context/ToastContext'
+
+
 function App() {
   return (
     <>
-      <AdminDashboard></AdminDashboard>
+      <ToastProvider>
+        <AdminDashboard></AdminDashboard>
+      </ToastProvider>
     </>
   )
 }

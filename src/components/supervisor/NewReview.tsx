@@ -2,33 +2,49 @@ import { useEffect, useState, type ChangeEvent } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 
 import ReviewCategoryInputCard from "../common/ReviewCategoryInputCard";
-import { useReviewCategories } from "../../hooks/useReviewCategories";
+import { useSelectReviewCategories } from "../../hooks/useSelectReviewCategories";
+import { useInsertReview } from "../../hooks/useInsertReview";
+
 import { groupPromptsByCategory } from "../../services/reviewPromptService";
 import type { ReviewCategory, Prompt } from "../../types/ReviewPrompt";
+import { useToast } from "../../context/ToastContext";
+import mapReviewCategory from "../../utils/map-review-category";
+import type { ReviewCategoryKeyType } from "../../types/reviewCategoryKey";
 
 export interface EmployeeReviewForm {
-    teamMember: string,
-    reviewDate: string,
+    employee_id: string,
+    supervisor_id: string | null,
+    review_date: string,
     milestone: string,
     categories: Record<string, ReviewCategory>;
-    totalScore: number,
-    finalFeedback: string,
-    status: string
+    total_score: number,
+    final_feedback: string,
+    review_status: string
 }
 
 export default function NewReview() {
-    const [reviewForm, setReviewForm] = useState<EmployeeReviewForm>({
-        teamMember: '',
-        // reviewDate: new Date().toISOString().split("T")[0],
-        reviewDate: '',
+    const getInitialReviewForm = (): EmployeeReviewForm => ({
+        employee_id: '',
+        supervisor_id: null,
+        review_date: new Date().toISOString().split("T")[0],
         milestone: '',
         categories: {},
-        totalScore: 0,
-        finalFeedback: '',
-        status: ''
+        total_score: 0,
+        final_feedback: '',
+        review_status: 'does_not_comply'
     });
 
-    const {categoriesData} = useReviewCategories();
+    const [reviewForm, setReviewForm] = useState<EmployeeReviewForm>(getInitialReviewForm);
+
+    const reviewStatusMappings: Record<string, string> = {
+        complies: 'Complies',
+        needs_improving: 'Needs Improving',
+        does_not_comply: 'Does Not Comply'
+    }
+
+    const {categoriesData} = useSelectReviewCategories();
+    const {submitReview, status, loading, error} = useInsertReview();
+    const {showToast} = useToast();
     
     useEffect(() => {
         const groupedCategories = groupPromptsByCategory(categoriesData);
@@ -80,24 +96,60 @@ export default function NewReview() {
 
             let status = '';
             if(totalScore >= 67) {
-                status = 'Complies';
+                status = 'complies';
             } else if(totalScore >= 57) {
-                status = 'Needs Improving';
+                status = 'needs_improving';
             } else {
-                status = 'Does Not Comply';
+                status = 'does_not_comply';
             }
 
             return {
                 ...prev,
                 categories: updatedCategories,
-                totalScore,
-                status
+                total_score: totalScore,
+                review_status: status
             };
         });
     };
 
-    const handleSubmit = () => {
-        console.log(reviewForm);
+    const handleSubmit = async () => {
+        const missingScores = Object.values(reviewForm.categories)
+            .flatMap((category) => 
+                category.prompts.filter((prompt) => prompt.score === 0)
+            );
+        
+        const categoryCounts = missingScores.reduce<Record<string, number>>(
+            (counts, prompt) => {
+                counts[prompt.category] = (counts[prompt.category] || 0) + 1;
+
+                return counts;
+            }, {}
+        );
+
+        const formattedCounts = Object.entries(categoryCounts)
+            .map(([category, count]) => 
+                `${mapReviewCategory(category as ReviewCategoryKeyType)}: ${count}`
+            );
+        
+        if(missingScores.length > 0) {
+            showToast('Missing Scores', formattedCounts, 'warning');
+            return;
+        }
+        
+        if(reviewForm.final_feedback === '') {
+            showToast('Final Feedback Required', ['Please enter your final feedback'], 'warning');
+            return;
+        }
+
+        try {
+            const response = await submitReview(reviewForm);
+            showToast('Success', ['Review Submitted'], 'success');
+            setReviewForm(getInitialReviewForm);
+            console.log('Review Submitted', response);
+        } catch(err) {
+            showToast('Error', ['Unable to submit review'], 'danger');
+            console.log('Failed to submit review', err);
+        }
     }
     
     const renderReviewCategoryInputCards = () => {
@@ -146,28 +198,40 @@ export default function NewReview() {
                 <Col md={12}>
                     <Form.Group>
                         <Form.Label className="fw-semibold">
-                            <small>Select Team Member</small>
+                            <small>
+                                Select Team Member
+                                {
+                                    (reviewForm.employee_id === '') &&
+                                    <span className="required-input"> *</span>
+                                }  
+                            </small>
                         </Form.Label>
                         <Form.Select 
-                            name="teamMember"
-                            value={reviewForm.teamMember}
+                            name="employee_id"
+                            value={reviewForm.employee_id}
                             onChange={(e) => handleChange(e)}
                         >
                             <option value='' hidden>Choose a frontline team member</option>
                             <option value='Dalton McKinney'>Dalton McKinney</option>
-                            <option value='Jhonny Test'>Jhonney Test</option>
+                            <option value='bd1738e6-e0a7-47c4-b712-92464adc4e70'>Jhonney Test</option>
                         </Form.Select>
                     </Form.Group>                   
                 </Col>
                 <Col md={12}>
                     <Form.Group>
                         <Form.Label className="fw-semibold">
-                            <small>Review Date</small>
+                            <small>
+                                Review Date
+                                {
+                                    (reviewForm.review_date === '') &&
+                                    <span className="required-input"> *</span>
+                                }  
+                            </small>
                         </Form.Label>
                         <Form.Control 
                             type="date" 
-                            name="reviewDate"
-                            value={reviewForm.reviewDate}
+                            name="review_date"
+                            value={reviewForm.review_date}
                             onChange={(e) => handleChange(e)} 
                             placeholder="Select a date"
                         />
@@ -176,7 +240,13 @@ export default function NewReview() {
                 <Col md={12}>
                     <Form.Group>
                         <Form.Label className="fw-semibold">
-                            <small>Milestone</small>
+                            <small>
+                                Milestone
+                                {
+                                    (reviewForm.milestone === '') &&
+                                    <span className="required-input"> *</span>
+                                }  
+                            </small>
                         </Form.Label>
                         <Form.Select 
                             name="milestone"
@@ -194,32 +264,41 @@ export default function NewReview() {
             </Row>
             {
                 (
-                    reviewForm.teamMember && 
-                    reviewForm.reviewDate &&
+                    reviewForm.employee_id && 
+                    reviewForm.review_date &&
                     reviewForm.milestone
                 ) && 
                 <div className="d-flex flex-column gap-4 mt-3">
                     {renderReviewCategoryInputCards()}
                     <Card className="border shadow-sm rounded-4 p-2 border-primary">
                         <Card.Body>
-                            <h5 className="mb-0">Final Feedback</h5>
+                            <h5 className="mb-0">
+                                Final Feedback
+                                {
+                                    (reviewForm.final_feedback === '') &&
+                                    <span className="required-input"> *</span>
+                                }    
+                            </h5>
                             <small className="text-muted">Provide overall thoughts and summary for this review</small>
 
                             <Form.Group className="mt-2">
                                 <Form.Control
                                     as="textarea"
                                     rows={5}
-                                    name="finalFeedback"
+                                    name="final_feedback"
                                     placeholder="Enter your final feedback and overall assessment..."
-                                    value={reviewForm.finalFeedback}
+                                    value={reviewForm.final_feedback}
                                     onChange={(e) => handleChange(e)}
                                 />
 
                             </Form.Group>
                             <Row className="mt-4">
                                 <Col md={8}>
-                                    <p className="total-score mb-0">Total Score: {reviewForm.totalScore} / 75</p>
-                                    <p className="review-status mb-0">Status: {reviewForm.status}</p>
+                                    <p className="total-score mb-0">Total Score: {reviewForm.total_score} / 75</p>
+                                    <p className={`review-status mb-0`}>
+                                        Status: 
+                                        <span className={reviewForm.review_status}> {reviewStatusMappings[reviewForm.review_status]}</span>
+                                    </p>
                                 </Col>
                                 <Col md={4} className="d-flex justify-content-end">
                                     <Button variant="primary" className="fw-semibold" onClick={handleSubmit}>Submit Review</Button>

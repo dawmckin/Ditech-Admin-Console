@@ -16,3 +16,9 @@ export interface ReviewCategory {
     prompts: Prompt[],
     created_at?: string
 }
+
+export interface InsertReviewResponse {
+    success: boolean;
+    data?: ReviewCategory;
+    error?: unknown;
+}

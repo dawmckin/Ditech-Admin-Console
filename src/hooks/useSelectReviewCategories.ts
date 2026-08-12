@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { getReviewPrompts } from "../services/reviewPromptService";
+import { getReviewCategories } from "../services/reviewPromptService";
 import type { ReviewCategory } from "../types/ReviewPrompt";
 
-export function useReviewCategories() {
+export function useSelectReviewCategories() {
     const [categoriesData, setCategoriesData] = useState<ReviewCategory[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
@@ -10,7 +10,7 @@ export function useReviewCategories() {
     useEffect(() => {
         async function loadPrompts() {
             try {
-                const categoriesData = await getReviewPrompts();
+                const categoriesData = await getReviewCategories();
                 setCategoriesData(categoriesData);
             } catch(err) {
                 setError(err as Error)
