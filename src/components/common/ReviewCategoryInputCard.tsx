@@ -42,7 +42,13 @@ export default function ReviewCategoryInputCard({category, categoryTitle, prompt
     return (
         <Card className="border-0 shadow-sm rounded-4 p-2">
             <Card.Body>
-                <h5 className="mb-4">{categoryTitle}</h5>
+                <h5 className="mb-4">
+                    {categoryTitle}
+                    {
+                        (reviewPrompts.find(prompt => prompt.score === 0)) &&
+                        <span className="required-input"> *</span>
+                    }
+                </h5>
 
                 {reviewPrompts?.map((prompt) => (
                     <div key={prompt.id} className="mb-2">

@@ -131,6 +131,10 @@ body {
   box-sizing: border-box;
 }
 
+.required-input {
+  color: red;
+}
+
 .audit-log-container {
  	height: 65vh;
     overflow-y: auto;
@@ -153,5 +157,17 @@ p.total-score {
 p.review-status {
   font-size: 1.2rem;
   font-weight: bold;
-  color: red;
+  /* color: red; */
+
+  & span.complies {
+    color: #22c55e;
+  }
+
+  & span.needs_improving {
+    color: #ffc107;
+  }
+
+  & span.does_not_comply {
+    color: #dc3545;
+  }
 }
