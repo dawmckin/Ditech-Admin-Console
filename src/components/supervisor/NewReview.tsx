@@ -43,7 +43,7 @@ export default function NewReview() {
     }
 
     const {categoriesData} = useSelectReviewCategories();
-    const {submitReview, status, loading, error} = useInsertReview();
+    const {submitReview} = useInsertReview();
     const {showToast} = useToast();
     
     useEffect(() => {

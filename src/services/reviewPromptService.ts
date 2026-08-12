@@ -50,10 +50,15 @@ export async function insertPromptResponses(categoryData: any, reviewId: string)
         .from('prompt_responses')
         .insert(prompts)
 
-    // console.log(data);
-    if(error) throw Error;
+    if(data) {
+        return {success: true}
+    }
 
-    return {success: true};
+    if(error) {
+        throw Error;
+    }
+
+    return {success: false};
 }
 
 export async function insertReview(reviewData: EmployeeReviewForm): Promise<InsertReviewResponse> {
