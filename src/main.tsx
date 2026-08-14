@@ -5,8 +5,15 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import './index.css'
 import App from './App.tsx'
 
+import { AuthProvider } from './context/AuthContext.tsx';
+import { ToastProvider } from './context/ToastContext.tsx';
+
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+	<StrictMode>
+		<AuthProvider>
+      		<ToastProvider>
+        		<App />
+      		</ToastProvider>
+    	</AuthProvider>
+  	</StrictMode>,
 )

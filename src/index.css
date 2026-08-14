@@ -135,6 +135,19 @@ body {
   color: red;
 }
 
+.icon-circle {
+    width: 48px;
+    height: 48px;
+    border: 3px solid;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
 .audit-log-container {
  	height: 65vh;
     overflow-y: auto;
@@ -150,24 +163,23 @@ body {
 }
 
 p.total-score {
-  font-size: 1.1rem;
-  font-weight: 500;
+	font-size: 1.1rem;
+	font-weight: 500;
 }
 
 p.review-status {
-  font-size: 1.2rem;
-  font-weight: bold;
-  /* color: red; */
+	font-size: 1.2rem;
+	font-weight: bold;
 
-  & span.complies {
-    color: #22c55e;
-  }
+	& span.complies {
+		color: #22c55e;
+	}
 
-  & span.needs_improving {
-    color: #ffc107;
-  }
+	& span.needs_improving {
+		color: #ffc107;
+	}
 
-  & span.does_not_comply {
-    color: #dc3545;
-  }
+	& span.does_not_comply {
+		color: #dc3545;
+	}
 }

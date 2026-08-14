@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getReviewCategories } from "../services/reviewPromptService";
+import { getReviewCategories } from "../services/reviewService";
 import type { ReviewCategory } from "../types/ReviewPrompt";
 
 export function useSelectReviewCategories() {
@@ -10,8 +10,8 @@ export function useSelectReviewCategories() {
     useEffect(() => {
         async function loadPrompts() {
             try {
-                const categoriesData = await getReviewCategories();
-                setCategoriesData(categoriesData);
+                const data = await getReviewCategories();
+                setCategoriesData(data);
             } catch(err) {
                 setError(err as Error)
             } finally {

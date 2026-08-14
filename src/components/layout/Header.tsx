@@ -1,7 +1,28 @@
 import { Badge, Container, Navbar } from "react-bootstrap";
 import ditechLogo from "./../../assets/images/ditech-logo.png";
 
-export default function Header() {
+import { useToast } from "../../context/ToastContext";
+
+import useAuth from "../../hooks/useAuth";
+import type { UserRole } from "../../types/User";
+
+interface HeaderProps {
+    userRole: UserRole;
+}
+
+export default function Header({userRole}: HeaderProps) {
+    const badgeText = {
+        admin: {text: 'Admin', variant: 'info'},
+        supervisor: {text: 'Supervisor', variant: 'primary'},
+        frontline: {text: 'Frontline', variant: 'success'},
+    }
+    const {signOut} = useAuth();
+    const {showToast} = useToast();
+
+    const handleLogout = async () => {
+        await signOut();
+        showToast('Logout Successful', [''], 'success');
+    }
 
     return (
         <Navbar 
@@ -16,22 +37,25 @@ export default function Header() {
                     <img 
                         src={ditechLogo}
                         alt="DITECH"
-                        width={42}
-                        height={42}
-                        className="me-3"
+                        width={40}
+                        height={50}
+                        className=""
                     />
 
-                    <div>
-                        <div className="d-flex align-items-center gap-2">
-                            <h3 className="mb-0 fw-bold">Admin Console</h3>
-                            <Badge bg="primary" pill>Admin</Badge>
+                    <div className="d-flex">
+                        <div className="d-flex flex-column px-2">
+                            <h5 className="mb-0 fw-bold">Admin Console</h5>
+                            <small className="text-muted">System Management</small>
                         </div>
-                        <small className="text-muted">System Management</small>
+                        <div className="d-flex align-items-center">
+                            <Badge bg={badgeText[userRole]?.variant} pill>{`${badgeText[userRole]?.text}`}</Badge>
+                        </div>
                     </div>
                 </div>
 
                 <button 
                     className="btn btn-link text-dark text-decoration-none fw-semibold"
+                    onClick={handleLogout}
                 >
                     Logout
                 </button>

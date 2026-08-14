@@ -2,14 +2,19 @@ import { useEffect, useState, type ChangeEvent } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 
 import ReviewCategoryInputCard from "../common/ReviewCategoryInputCard";
+
+import useAuth from "../../hooks/useAuth";
+import { useToast } from "../../context/ToastContext";
+
+import { useSelectUsers } from "../../hooks/useSelectUsers";
 import { useSelectReviewCategories } from "../../hooks/useSelectReviewCategories";
 import { useInsertReview } from "../../hooks/useInsertReview";
 
-import { groupPromptsByCategory } from "../../services/reviewPromptService";
 import type { ReviewCategory, Prompt } from "../../types/ReviewPrompt";
-import { useToast } from "../../context/ToastContext";
-import mapReviewCategory from "../../utils/map-review-category";
 import type { ReviewCategoryKeyType } from "../../types/reviewCategoryKey";
+
+import mapReviewCategory from "../../utils/map-review-category";
+import groupPromptsByCategory from "../../utils/group-prompts-by-category";
 
 export interface EmployeeReviewForm {
     employee_id: string,
@@ -23,9 +28,11 @@ export interface EmployeeReviewForm {
 }
 
 export default function NewReview() {
+    const {user} = useAuth();
+
     const getInitialReviewForm = (): EmployeeReviewForm => ({
         employee_id: '',
-        supervisor_id: null,
+        supervisor_id: user?.user_id ?? '',
         review_date: new Date().toISOString().split("T")[0],
         milestone: '',
         categories: {},
@@ -42,9 +49,11 @@ export default function NewReview() {
         does_not_comply: 'Does Not Comply'
     }
 
+    const {showToast} = useToast();
+
+    const {usersData} = useSelectUsers();
     const {categoriesData} = useSelectReviewCategories();
     const {submitReview} = useInsertReview();
-    const {showToast} = useToast();
     
     useEffect(() => {
         const groupedCategories = groupPromptsByCategory(categoriesData);
@@ -212,8 +221,13 @@ export default function NewReview() {
                             onChange={(e) => handleChange(e)}
                         >
                             <option value='' hidden>Choose a frontline team member</option>
-                            <option value='Dalton McKinney'>Dalton McKinney</option>
-                            <option value='bd1738e6-e0a7-47c4-b712-92464adc4e70'>Jhonney Test</option>
+                            {
+                                usersData.filter(user => user.user_role === 'frontline').map(user => (
+                                    <option value={user.user_id}>
+                                        {`${user.first_name} ${user.last_name}`}
+                                    </option>
+                                ))
+                            }
                         </Form.Select>
                     </Form.Group>                   
                 </Col>

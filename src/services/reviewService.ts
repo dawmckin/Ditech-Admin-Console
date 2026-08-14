@@ -2,23 +2,6 @@ import { supabase } from "../lib/supabase";
 import type { ReviewCategory, InsertReviewResponse } from "../types/ReviewPrompt";
 import type { EmployeeReviewForm } from "../components/supervisor/NewReview";
 
-
-export function groupPromptsByCategory(categories: ReviewCategory[]) {
-    return categories.reduce((groups, category) =>  {
-        if(!groups[category.category]) {
-            groups[category.category] = {
-                id: category.id,
-                category: category.category,
-                category_title: category.category_title,
-                category_order: category.category_order,
-                prompts: category.prompts
-            };
-        }
-
-        return groups;
-    }, {} as Record<string, ReviewCategory>);
-}
-
 export async function getReviewCategories(): Promise<ReviewCategory[]> {
     const { data, error } = await supabase
         .from('review_categories')
