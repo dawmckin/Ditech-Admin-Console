@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { insertReview } from "../services/reviewPromptService";
+import { insertReview } from "../services/reviewService";
 import type { EmployeeReviewForm } from "../components/supervisor/NewReview";
 
 export function useInsertReview() {
