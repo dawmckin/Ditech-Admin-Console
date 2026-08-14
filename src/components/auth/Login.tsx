@@ -14,7 +14,7 @@ export default function Login() {
     // const [loading, setLoading] = useState(false);
     // const [error, setError] = useState('');
     const navigate = useNavigate();
-    const {signIn, resetPassword, loading, error} = useAuth();
+    const {signIn, resetPassword, loading} = useAuth();
     const {showToast} = useToast();
 
     const handleLogin = async (e: FormEvent) => {
