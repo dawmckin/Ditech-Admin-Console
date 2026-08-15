@@ -10,6 +10,8 @@ export interface User {
     last_name: string;
     is_active: boolean;
     user_role: UserRole;
+    current_milestone: string;
     start_date: string;
+    next_review: string;
     created_at: string;
 }

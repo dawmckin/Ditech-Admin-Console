@@ -148,8 +148,12 @@ body {
     flex-shrink: 0;
 }
 
-.audit-log-container {
- 	height: 65vh;
+.review-details-accordion .accordion-button {
+  padding: 5px 10px;
+}
+
+.audit-log-container, .review-dashboard-container {
+ 	  height: 85vh;
     overflow-y: auto;
 }
 

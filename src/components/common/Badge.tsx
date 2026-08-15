@@ -6,7 +6,9 @@ export type BadgeType =
     | 'review'
     | 'approval' 
     | 'comment'
-    | 'login';
+    | 'login'
+    | 'milestone'
+    | 'milestone_light';
 
 export type BadgeVariant = 
     | 'primary'
@@ -41,6 +43,14 @@ export default function Badge({type, text}: BadgeProps) {
             icon: "box-arrow-in-right",
             variant: "primary",
         },
+        milestone: {
+            icon: 'award-fill',
+            variant: 'primary'
+        },
+        milestone_light: {
+            icon: 'award-fill',
+            variant: 'info'
+        }
     };
 
     const badge = badgeConfig[type];
@@ -53,7 +63,7 @@ export default function Badge({type, text}: BadgeProps) {
         >
             {badge.icon && <i className={`bi bi-${badge.icon}`}></i>}
 
-            {type ?? text}
+            {text ?? type}
         </BootstrapBadge>
     );
 }

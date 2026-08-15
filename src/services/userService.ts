@@ -13,3 +13,21 @@ export async function getUsers(): Promise<User[]> {
 
     return data;
 }
+
+export async function getPendingReviewUsers(): Promise<User[]> {
+    const reviewRangeDate = new Date;
+    reviewRangeDate.setDate(reviewRangeDate.getDate() + 60);
+
+    const { data, error } = await supabase
+        .from('users')
+        .select(`*`)
+        .eq('user_role', 'frontline')
+        .lte('start_date', reviewRangeDate.toISOString())
+        .order('next_review');
+
+    if(error) {
+        throw Error;
+    }
+
+    return data;
+}

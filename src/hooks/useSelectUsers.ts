@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import { getUsers } from "../services/userService";
+import { getUsers, getPendingReviewUsers } from "../services/userService";
 
 import type { User } from "../types/User";
 
-export function useSelectUsers() {
+type GetUsersType = 
+    | 'all'
+    | 'pendingReview'
+
+export function useSelectUsers(type: GetUsersType) {
     const [usersData, setUsersData] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
@@ -20,7 +24,24 @@ export function useSelectUsers() {
             }
         }
 
-        loadUsers();
+        async function loadPendingReviewUsers() {
+            try {
+                const data = await getPendingReviewUsers();
+                setUsersData(data);
+            } catch (err) {
+                setError(err as Error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        switch(type) {
+            case 'pendingReview':
+                loadPendingReviewUsers();
+                break;
+            default:
+                loadUsers();
+        }
     }, []);
 
     return {usersData, loading, error};

@@ -23,7 +23,7 @@ export default function ImpersonationCard({onUserSelection}: ImpersonationCardPr
     );
     const [isOpen, setIsOpen] = useState(false);
     
-    const {usersData} = useSelectUsers();
+    const {usersData} = useSelectUsers('all');
 
     useEffect(() => {
         onUserSelection(impersonationForm)
