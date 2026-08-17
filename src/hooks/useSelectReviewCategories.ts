@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getReviewCategories } from "../services/reviewService";
-import type { ReviewCategory } from "../types/ReviewPrompt";
+import type { ReviewCategory } from "../types/Review";
 
 export function useSelectReviewCategories() {
     const [categoriesData, setCategoriesData] = useState<ReviewCategory[]>([]);

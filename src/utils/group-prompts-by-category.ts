@@ -1,4 +1,4 @@
-import type { ReviewCategory } from "../types/ReviewPrompt";
+import type { ReviewCategory } from "../types/Review";
 
 export default function groupPromptsByCategory(categories: ReviewCategory[]) {
     return categories.reduce((groups, category) =>  {

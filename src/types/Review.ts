@@ -17,6 +17,18 @@ export interface ReviewCategory {
     created_at?: string
 }
 
+export interface Review {
+    review_id: string;
+    employee_id: string;
+    supervisor_id: string;
+    review_date: string;
+    milestone: string;
+    total_score: number;
+    final_feedback: string;
+    review_status: string;
+    created_at?: string;
+}
+
 export interface InsertReviewResponse {
     success: boolean;
     data?: ReviewCategory;

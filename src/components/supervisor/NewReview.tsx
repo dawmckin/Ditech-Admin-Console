@@ -10,7 +10,7 @@ import { useSelectUsers } from "../../hooks/useSelectUsers";
 import { useSelectReviewCategories } from "../../hooks/useSelectReviewCategories";
 import { useInsertReview } from "../../hooks/useInsertReview";
 
-import type { ReviewCategory, Prompt } from "../../types/ReviewPrompt";
+import type { ReviewCategory, Prompt } from "../../types/Review";
 import type { ReviewCategoryKeyType } from "../../types/reviewCategoryKey";
 
 import mapReviewCategory from "../../utils/map-review-category";

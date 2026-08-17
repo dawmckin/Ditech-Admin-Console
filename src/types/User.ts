@@ -1,3 +1,5 @@
+import type { Review } from "./Review";
+
 export type UserRole = 
     | 'admin'
     | 'supervisor'
@@ -12,6 +14,8 @@ export interface User {
     user_role: UserRole;
     current_milestone: string;
     start_date: string;
-    next_review: string;
+    last_review_date: string;
+    next_review_date: string;
     created_at: string;
+    reviews: Review[];
 }

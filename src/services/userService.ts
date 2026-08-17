@@ -20,10 +20,13 @@ export async function getPendingReviewUsers(): Promise<User[]> {
 
     const { data, error } = await supabase
         .from('users')
-        .select(`*`)
+        .select(`
+            *,
+            reviews!reviews_employee_id_fkey (*)
+        `)
         .eq('user_role', 'frontline')
         .lte('start_date', reviewRangeDate.toISOString())
-        .order('next_review');
+        .order('next_review_date');
 
     if(error) {
         throw Error;

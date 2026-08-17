@@ -149,7 +149,16 @@ body {
 }
 
 .review-details-accordion .accordion-button {
-  padding: 5px 10px;
+    padding: 5px 10px;
+}
+
+.review-details-accordion .prev-reviews-disabled button {
+    cursor: not-allowed;
+    pointer-events: none;
+
+    &&::after {
+      display: none;
+    }
 }
 
 .audit-log-container, .review-dashboard-container {

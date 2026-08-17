@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabase";
-import type { ReviewCategory, InsertReviewResponse } from "../types/ReviewPrompt";
+import type { ReviewCategory, InsertReviewResponse } from "../types/Review";
 import type { EmployeeReviewForm } from "../components/supervisor/NewReview";
 
 export async function getReviewCategories(): Promise<ReviewCategory[]> {

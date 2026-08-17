@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, Form } from "react-bootstrap";
 
-import type { Prompt } from "../../types/ReviewPrompt";
+import type { Prompt } from "../../types/Review";
 
 import './ReviewCategoryInputCard.css';
 
