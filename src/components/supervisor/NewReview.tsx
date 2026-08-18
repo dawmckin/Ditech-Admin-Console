@@ -175,7 +175,7 @@ export default function NewReview({supervisor}: NewReviewProps) {
     const renderReviewCategoryInputCards = () => {
         return Object.entries(reviewForm.categories ?? {}).map(cat => 
             <ReviewCategoryInputCard 
-                category={cat[0]} 
+                category={cat[0] as ReviewCategoryKeyType} 
                 categoryTitle={cat[1].category_title} 
                 prompts={cat[1].prompts} 
                 onCardChange={(reviewPrompt) => handleCardChange(reviewPrompt)}

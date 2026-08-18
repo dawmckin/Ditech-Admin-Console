@@ -4,9 +4,10 @@ import { Card, Form } from "react-bootstrap";
 import type { Prompt } from "../../types/Review";
 
 import './ReviewCategoryInputCard.css';
+import type { ReviewCategoryKeyType } from "../../types/reviewCategoryKey";
 
 interface ReviewCategoryInputCardProps {
-    category: string,
+    category: ReviewCategoryKeyType,
     categoryTitle: string,
     prompts: Prompt[],
     onCardChange: (reviewPrompt: Prompt[]) => void
