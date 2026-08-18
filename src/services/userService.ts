@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabase";
-import type { User } from "../types/User";
+import type { UpdateUserResponse, User } from "../types/User";
 
 export async function getUsers(): Promise<User[]> {
     const { data, error } = await supabase
@@ -12,4 +12,61 @@ export async function getUsers(): Promise<User[]> {
     }
 
     return data;
+}
+
+export async function getPendingReviewUsers(): Promise<User[]> {
+    const reviewRangeDate = new Date;
+    reviewRangeDate.setDate(reviewRangeDate.getDate() + 60);
+
+    const { data, error } = await supabase
+        .from('users')
+        .select(`
+            *,
+            reviews!reviews_employee_id_fkey (
+                *,
+                supervisor_data:reviews_supervisor_id_fkey (
+                    user_id,
+                    first_name,
+                    last_name
+                ),
+                prompts:prompt_responses!prompt_responses_review_id_fkey (
+                    *,
+                    category_data:prompt_responses_category_fkey (
+                        category_title,
+                        category_order
+                    ),
+                    prompt_data:prompt_responses_prompt_id_fkey (
+                        prompt_text,
+                        prompt_order
+                    )
+                )
+            )
+        `)
+        .eq('user_role', 'frontline')
+        .lte('start_date', reviewRangeDate.toISOString())
+        .order('next_review_date');
+
+    if(error) {
+        throw Error;
+    }
+
+    return data;
+}
+
+export async function updateUser(userData: User): Promise<UpdateUserResponse> {
+    const { data, error } = await supabase
+        // .from('users')
+        // .select('*')
+        // .eq('user_id', userData.user_id);
+        .from('users')
+        .update(userData)
+        .eq('user_id', userData.user_id)
+        .select();
+
+    if(error) {
+        throw Error;
+        // return {'success': false, error};
+    }
+
+    return {success: true, data: data[0]};
 }

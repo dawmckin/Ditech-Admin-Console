@@ -6,7 +6,16 @@ export type BadgeType =
     | 'review'
     | 'approval' 
     | 'comment'
-    | 'login';
+    | 'login'
+    | 'milestone'
+    | 'milestone_light'
+    | 'overdue'
+    | 'category_score'
+    | 'prompt_score_success'
+    | 'prompt_score'
+    | 'complies'
+    | 'needs_improving'
+    | 'does_not_comply';
 
 export type BadgeVariant = 
     | 'primary'
@@ -41,6 +50,42 @@ export default function Badge({type, text}: BadgeProps) {
             icon: "box-arrow-in-right",
             variant: "primary",
         },
+        milestone: {
+            icon: 'award-fill',
+            variant: 'primary'
+        },
+        milestone_light: {
+            icon: 'award-fill',
+            variant: 'info'
+        },
+        overdue: {
+            icon: 'clock-history',
+            variant: 'danger'
+        },
+        category_score: {
+            icon: '',
+            variant: 'dark'
+        },
+        prompt_score_success: {
+            icon: '',
+            variant: 'success'
+        },
+        prompt_score: {
+            icon: '',
+            variant: 'light'
+        },
+        complies: {
+            icon: '',
+            variant: 'success'  
+        },
+        needs_improving: {
+            icon: '',
+            variant: 'warning'  
+        },
+        does_not_comply: {
+            icon: '',
+            variant: 'danger'  
+        }
     };
 
     const badge = badgeConfig[type];
@@ -49,11 +94,11 @@ export default function Badge({type, text}: BadgeProps) {
         <BootstrapBadge
             bg={badge.variant}
             pill
-            className="app-badge" 
+            className={`app-badge ${badge.variant === 'light' ? 'text-dark' : ''}`} 
         >
             {badge.icon && <i className={`bi bi-${badge.icon}`}></i>}
 
-            {type ?? text}
+            {text ?? type}
         </BootstrapBadge>
     );
 }

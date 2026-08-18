@@ -23,7 +23,7 @@ export default function ImpersonationCard({onUserSelection}: ImpersonationCardPr
     );
     const [isOpen, setIsOpen] = useState(false);
     
-    const {usersData} = useSelectUsers();
+    const {usersData} = useSelectUsers('all');
 
     useEffect(() => {
         onUserSelection(impersonationForm)
@@ -48,8 +48,6 @@ export default function ImpersonationCard({onUserSelection}: ImpersonationCardPr
         if(name === 'user') {
             onUserSelection(impersonationForm)
         }
-
-        console.log(impersonationForm);
     };
 
     const handleClear = () => {
@@ -117,7 +115,7 @@ export default function ImpersonationCard({onUserSelection}: ImpersonationCardPr
                                 <Col md={4}>
                                     <Form.Group>
                                         <Form.Label className="fw-semibold">
-                                            Select User
+                                            User
                                         </Form.Label>
                                         <Form.Select 
                                             name="user_id"
@@ -125,7 +123,7 @@ export default function ImpersonationCard({onUserSelection}: ImpersonationCardPr
                                             onChange={(e) => handleChange(e)}
                                             disabled={impersonationForm.user_role === 'admin'}
                                         >
-                                            <option value='' hidden>Select user</option>
+                                            <option value='' hidden>Select user...</option>
                                             {
                                                 usersData.filter(user => user.user_role === impersonationForm.user_role)
                                                     .map(user => (

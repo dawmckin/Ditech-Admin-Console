@@ -131,6 +131,10 @@ body {
   box-sizing: border-box;
 }
 
+#popover-basic {
+  z-index: 99999;
+}
+
 .required-input {
   color: red;
 }
@@ -148,8 +152,25 @@ body {
     flex-shrink: 0;
 }
 
-.audit-log-container {
- 	height: 65vh;
+.review-dashboard-accordion-header .accordion-button {
+    height: 4em;
+}
+
+.review-details-accordion .accordion-button {
+    padding: 5px 10px;
+}
+
+.review-details-accordion .prev-reviews-disabled button {
+    cursor: not-allowed;
+    pointer-events: none;
+
+    &&::after {
+      background-image: url('./assets/icons/dash.svg');
+    }
+}
+
+.audit-log-container, .review-dashboard-container {
+ 	  height: 85vh;
     overflow-y: auto;
 }
 

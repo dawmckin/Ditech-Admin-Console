@@ -1,3 +1,5 @@
+import type { Review } from "./Review";
+
 export type UserRole = 
     | 'admin'
     | 'supervisor'
@@ -10,6 +12,17 @@ export interface User {
     last_name: string;
     is_active: boolean;
     user_role: UserRole;
+    supervisor_id: string;
+    current_milestone: string;
     start_date: string;
+    last_review_date: string;
+    next_review_date: string;
     created_at: string;
+    reviews: Review[];
+}
+
+export interface UpdateUserResponse {
+    success: boolean;
+    data?: User;
+    error?: unknown;
 }

@@ -4,13 +4,21 @@ import { Card } from "react-bootstrap";
 import Tabs from "../common/Tabs"
 import ReviewDashboard from "./ReviewDashboard";
 import NewReview from "./NewReview";
+import type { ImpersonationForm } from "../admin/ImpersonationCard";
 
 import type { Tab } from "../../types/Tab";
+import type { User } from "../../types/User";
 
-type SupervisorTab = "reviewDashboard" | "newReview";
+export type SupervisorTab = "reviewDashboard" | "newReview";
 
-export default function SupervisorTabs() {
+interface SupervisorTabsProps {
+    user: User;
+    supervisor?: ImpersonationForm | null;
+}
+
+export default function SupervisorTabs({user, supervisor = null}: SupervisorTabsProps) {
     const [activeTab, setActiveTab] = useState<SupervisorTab>('reviewDashboard');
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     const tabs: Tab[] = [
         {id: 'reviewDashboard', label: 'Review Dashboard'},
@@ -20,9 +28,20 @@ export default function SupervisorTabs() {
     const renderTabContent = () => {
         switch(activeTab) {
             case 'reviewDashboard':
-                return <ReviewDashboard />;
+                return <ReviewDashboard 
+                    authUser={user} 
+                    supervisor={supervisor} 
+                    onNewReview={(activeTab: SupervisorTab, selectedUser: User) => {
+                        setActiveTab(activeTab);
+                        setSelectedUser(selectedUser);
+                    }}
+                />;
             case 'newReview':
-                return <NewReview />;
+                return <NewReview 
+                    authUser={user} 
+                    supervisor={supervisor} 
+                    selectedUser={selectedUser}
+                />;
         }
     }
 
@@ -31,7 +50,10 @@ export default function SupervisorTabs() {
             <Tabs 
                 tabs={tabs} 
                 activeTab={activeTab} 
-                onTabChange={(tab) => setActiveTab(tab as SupervisorTab)}
+                onTabChange={(tab) => {
+                    setActiveTab(tab as SupervisorTab);
+                    setSelectedUser(null);
+                }}
             />
 
             <Card className="border-0 shadow-sm rounded-4">
