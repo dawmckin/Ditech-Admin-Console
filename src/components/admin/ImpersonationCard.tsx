@@ -48,8 +48,6 @@ export default function ImpersonationCard({onUserSelection}: ImpersonationCardPr
         if(name === 'user') {
             onUserSelection(impersonationForm)
         }
-
-        console.log(impersonationForm);
     };
 
     const handleClear = () => {

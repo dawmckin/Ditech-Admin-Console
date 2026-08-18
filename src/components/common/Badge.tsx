@@ -9,7 +9,10 @@ export type BadgeType =
     | 'login'
     | 'milestone'
     | 'milestone_light'
-    | 'overdue';
+    | 'overdue'
+    | 'category_score'
+    | 'prompt_score_success'
+    | 'prompt_score';
 
 export type BadgeVariant = 
     | 'primary'
@@ -55,7 +58,19 @@ export default function Badge({type, text}: BadgeProps) {
         overdue: {
             icon: 'clock-history',
             variant: 'danger'
-        }
+        },
+        category_score: {
+            icon: '',
+            variant: 'dark'
+        },
+        prompt_score_success: {
+            icon: '',
+            variant: 'success'
+        },
+        prompt_score: {
+            icon: '',
+            variant: 'light'
+        },
     };
 
     const badge = badgeConfig[type];
@@ -64,7 +79,7 @@ export default function Badge({type, text}: BadgeProps) {
         <BootstrapBadge
             bg={badge.variant}
             pill
-            className="app-badge" 
+            className={`app-badge ${badge.variant === 'light' ? 'text-dark' : ''}`} 
         >
             {badge.icon && <i className={`bi bi-${badge.icon}`}></i>}
 

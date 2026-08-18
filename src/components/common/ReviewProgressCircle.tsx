@@ -71,7 +71,7 @@ export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays
                                 />
                             </svg>
                             {
-                                (daysRemaining < 5) && (
+                                (daysRemaining <= 15) && (
                                     <div className="text-center" style={{lineHeight: '.75em'}}>
                                         <div className="fw-semibold" style={{fontSize: '.8em'}}>{daysRemaining}</div>
 

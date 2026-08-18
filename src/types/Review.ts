@@ -28,7 +28,7 @@ export interface ReviewCategory {
 export interface Review {
     review_id: string;
     employee_id: string;
-    supervisor_id: string;
+    supervisor_data?: Record<string, string>;
     review_date: string;
     milestone: string;
     total_score: number;

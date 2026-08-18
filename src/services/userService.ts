@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabase";
-import type { User } from "../types/User";
+import type { UpdateUserResponse, User } from "../types/User";
 
 export async function getUsers(): Promise<User[]> {
     const { data, error } = await supabase
@@ -24,6 +24,11 @@ export async function getPendingReviewUsers(): Promise<User[]> {
             *,
             reviews!reviews_employee_id_fkey (
                 *,
+                supervisor_data:reviews_supervisor_id_fkey (
+                    user_id,
+                    first_name,
+                    last_name
+                ),
                 prompts:prompt_responses!prompt_responses_review_id_fkey (
                     *,
                     category_data:prompt_responses_category_fkey (
@@ -46,4 +51,22 @@ export async function getPendingReviewUsers(): Promise<User[]> {
     }
 
     return data;
+}
+
+export async function updateUser(userData: User): Promise<UpdateUserResponse> {
+    const { data, error } = await supabase
+        // .from('users')
+        // .select('*')
+        // .eq('user_id', userData.user_id);
+        .from('users')
+        .update(userData)
+        .eq('user_id', userData.user_id)
+        .select();
+
+    if(error) {
+        throw Error;
+        // return {'success': false, error};
+    }
+
+    return {success: true, data: data[0]};
 }

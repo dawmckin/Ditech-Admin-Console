@@ -3,7 +3,6 @@ import { Button, Card, Col, Form, Row } from "react-bootstrap";
 
 import ReviewCategoryInputCard from "../common/ReviewCategoryInputCard";
 
-import useAuth from "../../hooks/useAuth";
 import { useToast } from "../../context/ToastContext";
 
 import { useSelectUsers } from "../../hooks/useSelectUsers";
@@ -16,6 +15,8 @@ import type { ReviewCategoryKeyType } from "../../types/reviewCategoryKey";
 import mapReviewCategory from "../../utils/map-review-category";
 import groupPromptsByCategory from "../../utils/group-prompts-by-category";
 import type { ImpersonationForm } from "../admin/ImpersonationCard";
+import type { User } from "../../types/User";
+import { useUpdateUser } from "../../hooks/useUpdateUser";
 
 export interface EmployeeReviewForm {
     employee_id: string,
@@ -29,23 +30,19 @@ export interface EmployeeReviewForm {
 }
 
 interface NewReviewProps {
+    authUser: User;
     supervisor?: ImpersonationForm | null;
+    selectedUser?: User | null;
 }
 
-export default function NewReview({supervisor}: NewReviewProps) {
-    const {user} = useAuth();
+export default function NewReview({authUser, supervisor = null, selectedUser}: NewReviewProps) {
+    const supervisorId = supervisor?.user_id ?? authUser?.user_id;
 
-    const [supervisorId, setSupervisorId] = useState(supervisor ? supervisor.user_id : user?.user_id);
-
-    useEffect(() => {
-        setSupervisorId(supervisor?.user_id);
-    }, [supervisor]);
-
-    const getInitialReviewForm = (): EmployeeReviewForm => ({
-        employee_id: '',
-        supervisor_id: user?.user_id ?? '',
+    const getInitialReviewForm = (reviewSubmit: boolean = false): EmployeeReviewForm => ({
+        employee_id: reviewSubmit ? '' : selectedUser?.user_id ?? '',
+        supervisor_id: supervisorId ?? '',
         review_date: new Date().toISOString().split("T")[0],
-        milestone: '',
+        milestone: reviewSubmit ? '' : selectedUser?.current_milestone ?? '',
         categories: {},
         total_score: 0,
         final_feedback: '',
@@ -65,6 +62,7 @@ export default function NewReview({supervisor}: NewReviewProps) {
     const {usersData} = useSelectUsers('all');
     const {categoriesData} = useSelectReviewCategories();
     const {submitReview} = useInsertReview();
+    const {updateUserAfterReview} = useUpdateUser();
     
     useEffect(() => {
         const groupedCategories = groupPromptsByCategory(categoriesData);
@@ -162,13 +160,36 @@ export default function NewReview({supervisor}: NewReviewProps) {
         }
 
         try {
-            const response = await submitReview(reviewForm);
-            showToast('Success', ['Review Submitted'], 'success');
-            setReviewForm(getInitialReviewForm);
-            console.log('Review Submitted', response);
-        } catch(err) {
+            const reviewResponse = await submitReview(reviewForm);
+            console.log('Review Submitted', reviewResponse);
+
+            try {
+                const selectedUser = usersData.filter(user => user.user_id === reviewForm.employee_id)[0];
+                const currentMilestone = (Number.parseInt(selectedUser.current_milestone) + 15).toString();
+                const lastReviewDate = new Date(selectedUser.next_review_date);
+                const nextReviewDate = new Date(selectedUser.next_review_date);
+                nextReviewDate.setDate(nextReviewDate.getDate() + 15);
+                
+                const updatedUser: User = {
+                    ...selectedUser,
+                    current_milestone: currentMilestone,
+                    last_review_date: lastReviewDate.toISOString(),
+                    next_review_date: nextReviewDate.toISOString()
+                };
+
+                const userResponse = await updateUserAfterReview(updatedUser);
+                console.log('User Updated After Review', userResponse);
+
+                showToast('Success', ['Review Submitted'], 'success');
+                setReviewForm(() => getInitialReviewForm(true));
+
+            } catch (userError) {
+                showToast('Error', ['Unable to update user after review'], 'danger');
+                console.log('Failed to update user after review', userError);
+            }
+        } catch(reviewErr) {
             showToast('Error', ['Unable to submit review'], 'danger');
-            console.log('Failed to submit review', err);
+            console.log('Failed to submit review', reviewErr);
         }
     }
     

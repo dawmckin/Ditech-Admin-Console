@@ -20,3 +20,9 @@ export interface User {
     created_at: string;
     reviews: Review[];
 }
+
+export interface UpdateUserResponse {
+    success: boolean;
+    data?: User;
+    error?: unknown;
+}

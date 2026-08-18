@@ -5,27 +5,24 @@ import { useSelectUsers } from "../../hooks/useSelectUsers";
 import ReviewProgressCircle from "../common/ReviewProgressCircle";
 import PreviousReview from "./PreviousReview";
 import type { AccordionEventKey } from "react-bootstrap/esm/AccordionContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ImpersonationForm } from "../admin/ImpersonationCard";
-import useAuth from "../../hooks/useAuth";
+import type { User } from "../../types/User";
 // import { useNavigate } from "react-router-dom";
+import type { SupervisorTab } from "./SupervisorTabs";
 
 interface ReviewDashboardProps {
-    supervisor?: ImpersonationForm | null
+    authUser: User;
+    supervisor?: ImpersonationForm | null;
+    onNewReview: (activeTab: SupervisorTab, selectedUser: User) => void;
 }
 
-export default function ReviewDashboard({supervisor}: ReviewDashboardProps) {
+export default function ReviewDashboard({authUser, supervisor = null, onNewReview}: ReviewDashboardProps) {
     const [activeUser, setActiveUser] = useState<AccordionEventKey | null>(null);
 
-    const {user} = useAuth();
-
-    const [supervisorId, setSupervisorId] = useState(supervisor ? supervisor.user_id : user?.user_id);
-
+    const supervisorId = supervisor?.user_id ?? authUser?.user_id;
+    
     const {usersData} = useSelectUsers('pendingReview');
-
-    useEffect(() => {
-        setSupervisorId(supervisor?.user_id);
-    }, [supervisor]);
 
     const renderPendingReviews = () => {
         return (
@@ -73,7 +70,7 @@ export default function ReviewDashboard({supervisor}: ReviewDashboardProps) {
                                             <Button 
                                                 className="border text-white"
                                                 variant="primary"
-                                                // onClick={() => navigate()}
+                                                onClick={() => onNewReview('newReview', user)}
                                                 // disabled={}
                                             >
                                                 New Review
@@ -83,7 +80,7 @@ export default function ReviewDashboard({supervisor}: ReviewDashboardProps) {
 
                                     {
                                         (user.reviews.length > 0) &&
-                                        <PreviousReview userId={user.user_id} reviewsData={user.reviews} onUserChange={() => activeUser}/>
+                                        <PreviousReview user={user} reviewsData={user.reviews} onUserChange={() => activeUser}/>
                                     }
                                 </Accordion.Body>
                             </Accordion.Item>
