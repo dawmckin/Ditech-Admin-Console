@@ -131,6 +131,10 @@ body {
   box-sizing: border-box;
 }
 
+#popover-basic {
+  z-index: 99999;
+}
+
 .required-input {
   color: red;
 }
@@ -148,6 +152,10 @@ body {
     flex-shrink: 0;
 }
 
+.review-dashboard-accordion-header .accordion-button {
+    height: 4em;
+}
+
 .review-details-accordion .accordion-button {
     padding: 5px 10px;
 }
@@ -157,7 +165,7 @@ body {
     pointer-events: none;
 
     &&::after {
-      display: none;
+      background-image: url('./assets/icons/dash.svg');
     }
 }
 

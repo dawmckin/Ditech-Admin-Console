@@ -15,6 +15,7 @@ import type { ReviewCategoryKeyType } from "../../types/reviewCategoryKey";
 
 import mapReviewCategory from "../../utils/map-review-category";
 import groupPromptsByCategory from "../../utils/group-prompts-by-category";
+import type { ImpersonationForm } from "../admin/ImpersonationCard";
 
 export interface EmployeeReviewForm {
     employee_id: string,
@@ -27,8 +28,18 @@ export interface EmployeeReviewForm {
     review_status: string
 }
 
-export default function NewReview() {
+interface NewReviewProps {
+    supervisor?: ImpersonationForm | null;
+}
+
+export default function NewReview({supervisor}: NewReviewProps) {
     const {user} = useAuth();
+
+    const [supervisorId, setSupervisorId] = useState(supervisor ? supervisor.user_id : user?.user_id);
+
+    useEffect(() => {
+        setSupervisorId(supervisor?.user_id);
+    }, [supervisor]);
 
     const getInitialReviewForm = (): EmployeeReviewForm => ({
         employee_id: '',
@@ -51,7 +62,7 @@ export default function NewReview() {
 
     const {showToast} = useToast();
 
-    const {usersData} = useSelectUsers();
+    const {usersData} = useSelectUsers('all');
     const {categoriesData} = useSelectReviewCategories();
     const {submitReview} = useInsertReview();
     
@@ -76,7 +87,7 @@ export default function NewReview() {
             ...prev,
             categories: initializedCategories
         }));
-    }, [categoriesData]);
+    }, [categoriesData, reviewForm.employee_id]);
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
@@ -222,7 +233,7 @@ export default function NewReview() {
                         >
                             <option value='' hidden>Choose a frontline team member</option>
                             {
-                                usersData.filter(user => user.user_role === 'frontline').map(user => (
+                                usersData.filter(user => user.user_role === 'frontline' && user.supervisor_id === supervisorId).map(user => (
                                     <option value={user.user_id}>
                                         {`${user.first_name} ${user.last_name}`}
                                     </option>

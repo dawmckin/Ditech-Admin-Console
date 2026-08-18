@@ -8,7 +8,8 @@ export type BadgeType =
     | 'comment'
     | 'login'
     | 'milestone'
-    | 'milestone_light';
+    | 'milestone_light'
+    | 'overdue';
 
 export type BadgeVariant = 
     | 'primary'
@@ -50,6 +51,10 @@ export default function Badge({type, text}: BadgeProps) {
         milestone_light: {
             icon: 'award-fill',
             variant: 'info'
+        },
+        overdue: {
+            icon: 'clock-history',
+            variant: 'danger'
         }
     };
 

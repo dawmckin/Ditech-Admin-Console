@@ -11,7 +11,7 @@ export default function AdminDashboard() {
     const renderView = () => {
         switch(selectedUser?.user_role) {
             case 'supervisor':
-                return <SupervisorTabs />            
+                return <SupervisorTabs supervisor={selectedUser}/>            
             case 'frontline':
                 return <SupervisorTabs />
             default:

@@ -4,12 +4,17 @@ import { Card } from "react-bootstrap";
 import Tabs from "../common/Tabs"
 import ReviewDashboard from "./ReviewDashboard";
 import NewReview from "./NewReview";
+import type { ImpersonationForm } from "../admin/ImpersonationCard";
 
 import type { Tab } from "../../types/Tab";
 
 type SupervisorTab = "reviewDashboard" | "newReview";
 
-export default function SupervisorTabs() {
+interface SupervisorTabsProps {
+    supervisor?: ImpersonationForm | null
+}
+
+export default function SupervisorTabs({supervisor}: SupervisorTabsProps) {
     const [activeTab, setActiveTab] = useState<SupervisorTab>('reviewDashboard');
 
     const tabs: Tab[] = [
@@ -20,9 +25,9 @@ export default function SupervisorTabs() {
     const renderTabContent = () => {
         switch(activeTab) {
             case 'reviewDashboard':
-                return <ReviewDashboard />;
+                return <ReviewDashboard supervisor={supervisor}/>;
             case 'newReview':
-                return <NewReview />;
+                return <NewReview supervisor={supervisor}/>;
         }
     }
 

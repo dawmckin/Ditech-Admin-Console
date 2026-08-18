@@ -12,6 +12,7 @@ export interface User {
     last_name: string;
     is_active: boolean;
     user_role: UserRole;
+    supervisor_id: string;
     current_milestone: string;
     start_date: string;
     last_review_date: string;
