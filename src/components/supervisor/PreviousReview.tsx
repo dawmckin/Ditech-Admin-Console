@@ -1,5 +1,5 @@
 import { Accordion, Card, Col, ProgressBar, Row } from "react-bootstrap";
-import Badge from "../common/Badge";
+import Badge, { type BadgeType } from "../common/Badge";
 import type { Review } from "../../types/Review";
 import { useEffect, useState } from "react";
 import PreviousReviewDetails from "./PreviousReviewDetails";
@@ -65,7 +65,7 @@ export default function PreviousReview({user, reviewsData, onUserChange}: Previo
             variant: 'warning'
         },
         does_not_comply: {
-            title: 'Does not comply',
+            title: 'Does Not Comply',
             variant: 'danger'
         }
     }
@@ -84,7 +84,12 @@ export default function PreviousReview({user, reviewsData, onUserChange}: Previo
                                 <Col md={10}>
                                     <Row>
                                         <Col md={12}>
-                                            <ProgressBar variant={reviewStatusMapping[review.review_status as ReviewStatusType].variant} max={75} now={review.total_score} className="w-100"/>
+                                            <ProgressBar 
+                                                variant={reviewStatusMapping[review.review_status as ReviewStatusType].variant} 
+                                                max={75} 
+                                                now={review.total_score} 
+                                                className="mt-1 w-100"
+                                            />
                                         </Col>
                                     </Row>
                                     <Row className="">
@@ -132,10 +137,10 @@ export default function PreviousReview({user, reviewsData, onUserChange}: Previo
                                             <div className="d-flex flex-column justify-content-between text-end h-100">
                                                 <div className="mt-3">
                                                     <p className="total-score mb-0">Total Score: {review.total_score} / 75</p>
-                                                    <p className={`review-status mb-0`}>
-                                                        {/* Status:  */}
-                                                        <span className={review.review_status}>{reviewStatusMapping[review.review_status as ReviewStatusType].title}</span>
-                                                    </p>                                                    
+                                                    <Badge 
+                                                        type={review.review_status as BadgeType}
+                                                        text={reviewStatusMapping[review.review_status as ReviewStatusType].title}
+                                                    />                                              
                                                 </div>
                                                 <div className="mt-2" style={{fontSize: '.8em'}}>
                                                     <small className="mt-auto text-muted">

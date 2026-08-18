@@ -30,7 +30,7 @@ export default function Login() {
                 );
                     
                 showToast('Login Successful', [`Welcome, ${authenticatedUser.first_name} ${authenticatedUser.last_name}`], 'success');
-                console.log(authenticatedUser.user_role);
+                // console.log(authenticatedUser.user_role);
                 switch (authenticatedUser.user_role) {
                     case "admin":
                         navigate("/admin", { replace: true });

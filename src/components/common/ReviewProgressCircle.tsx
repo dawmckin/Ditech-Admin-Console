@@ -28,10 +28,10 @@ export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays
     return (
         <>
             {
-                (elapsedDays > 15) ? 
+                (elapsedDays > reviewIntervalDays) ? 
                     <>
                         <div className="mx-3">
-                            <Badge type="overdue" text={`${daysOverdue} Days Overdue`} />
+                            <Badge type="overdue" text={`${daysOverdue} ${(daysRemaining === 1) ? 'day': 'days'} Overdue`} />
                         </div>                        
                     </> : 
                     <>
@@ -75,7 +75,7 @@ export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays
                                     <div className="text-center" style={{lineHeight: '.75em'}}>
                                         <div className="fw-semibold" style={{fontSize: '.8em'}}>{daysRemaining}</div>
 
-                                        <small className="text-muted" style={{fontSize: '.8em'}}>days</small>
+                                        <small className="text-muted" style={{fontSize: '.8em'}}>{(daysRemaining === 1) ? 'day': 'days'}</small>
                                     </div>
                                 )
                             }

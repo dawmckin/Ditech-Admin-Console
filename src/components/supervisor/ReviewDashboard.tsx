@@ -93,8 +93,8 @@ export default function ReviewDashboard({authUser, supervisor = null, onNewRevie
 
     return (
         <div className="p-4">
-            <h4>Employee Review Dashboard</h4>
-            <small className="text-muted">View users with active and upcoming review milestones</small>
+            <h4>Review Dashboard</h4>
+            <small className="text-muted">View frontline employees with active and upcoming review milestones</small>
             <hr />
 
             {renderPendingReviews()}

@@ -12,7 +12,10 @@ export type BadgeType =
     | 'overdue'
     | 'category_score'
     | 'prompt_score_success'
-    | 'prompt_score';
+    | 'prompt_score'
+    | 'complies'
+    | 'needs_improving'
+    | 'does_not_comply';
 
 export type BadgeVariant = 
     | 'primary'
@@ -71,6 +74,18 @@ export default function Badge({type, text}: BadgeProps) {
             icon: '',
             variant: 'light'
         },
+        complies: {
+            icon: '',
+            variant: 'success'  
+        },
+        needs_improving: {
+            icon: '',
+            variant: 'warning'  
+        },
+        does_not_comply: {
+            icon: '',
+            variant: 'danger'  
+        }
     };
 
     const badge = badgeConfig[type];

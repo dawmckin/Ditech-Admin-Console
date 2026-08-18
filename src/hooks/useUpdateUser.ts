@@ -8,7 +8,6 @@ export function useUpdateUser() {
     const [error, setError] = useState<Error | null>(null);
 
     const updateUserAfterReview = async (userData: User) => {
-        console.log(userData);
         setLoading(true);
         setError(null);
         setStatus(false);

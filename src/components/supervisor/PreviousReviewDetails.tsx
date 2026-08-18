@@ -16,7 +16,6 @@ interface PreviousReviewDetailsProps {
 }
 
 export default function PreviousReviewDetails({user, reviewer, milestone, prompts}: PreviousReviewDetailsProps) {
-    console.log(user);
     const [activeFeedbackId, setActiveFeedbackId] = useState<string | null>(null);
 
     const categorySummary = prompts.reduce<Record<ReviewCategoryKeyType, typeof prompts>>((acc, prompt) => {
