@@ -15,7 +15,8 @@ export type BadgeType =
     | 'prompt_score'
     | 'complies'
     | 'needs_improving'
-    | 'does_not_comply';
+    | 'does_not_comply'
+    | 'ready_for_review';
 
 export type BadgeVariant = 
     | 'primary'
@@ -57,6 +58,10 @@ export default function Badge({type, text}: BadgeProps) {
         milestone_light: {
             icon: 'award-fill',
             variant: 'info'
+        },
+        ready_for_review: {
+            icon: 'check-circle',
+            variant: 'success'  
         },
         overdue: {
             icon: 'clock-history',

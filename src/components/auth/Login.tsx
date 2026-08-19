@@ -40,9 +40,9 @@ export default function Login() {
                         navigate("/supervisor", { replace: true });
                         break;
 
-                    // case "frontline":
-                    //     navigate("/dashboard", { replace: true });
-                    //     break;
+                    case "frontline":
+                        navigate("/frontline", { replace: true });
+                        break;
 
                     default:
                         navigate("/unauthorized", { replace: true });
