@@ -11,7 +11,7 @@ interface TabsProps {
 export default function Tabs({tabs, activeTab, onTabChange}: TabsProps) {
 
     return (
-        <ButtonGroup className="w-100 mb-3 shadow-sm">
+        <ButtonGroup className="w-100 mb-3 shadow-sm" style={{display: `${tabs.length === 1 ? 'none' : ''}`}}>
             {
                 tabs.map(tab => (
                     <ToggleButton 

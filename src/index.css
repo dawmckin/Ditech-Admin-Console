@@ -131,6 +131,10 @@ body {
   box-sizing: border-box;
 }
 
+.page-container {
+  max-width: 90vw;
+}
+
 #popover-basic {
   z-index: 99999;
 }

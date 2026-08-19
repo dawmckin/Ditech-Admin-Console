@@ -12,11 +12,11 @@ import type { User } from "../../types/User";
 export type SupervisorTab = "reviewDashboard" | "newReview";
 
 interface SupervisorTabsProps {
-    user: User;
+    authUser: User;
     supervisor?: ImpersonationForm | null;
 }
 
-export default function SupervisorTabs({user, supervisor = null}: SupervisorTabsProps) {
+export default function SupervisorTabs({authUser, supervisor = null}: SupervisorTabsProps) {
     const [activeTab, setActiveTab] = useState<SupervisorTab>('reviewDashboard');
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
@@ -29,7 +29,7 @@ export default function SupervisorTabs({user, supervisor = null}: SupervisorTabs
         switch(activeTab) {
             case 'reviewDashboard':
                 return <ReviewDashboard 
-                    authUser={user} 
+                    authUser={authUser} 
                     supervisor={supervisor} 
                     onNewReview={(activeTab: SupervisorTab, selectedUser: User) => {
                         setActiveTab(activeTab);
@@ -38,7 +38,7 @@ export default function SupervisorTabs({user, supervisor = null}: SupervisorTabs
                 />;
             case 'newReview':
                 return <NewReview 
-                    authUser={user} 
+                    authUser={authUser} 
                     supervisor={supervisor} 
                     selectedUser={selectedUser}
                 />;

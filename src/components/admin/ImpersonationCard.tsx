@@ -27,7 +27,7 @@ export default function ImpersonationCard({onUserSelection}: ImpersonationCardPr
 
     useEffect(() => {
         onUserSelection(impersonationForm)
-    }, [impersonationForm?.user_id, onUserSelection]);
+    }, [impersonationForm?.user_id]);
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const {name, value} = e.target;
@@ -44,10 +44,6 @@ export default function ImpersonationCard({onUserSelection}: ImpersonationCardPr
             user_name: (name === 'user_id') ? userName : "",
             [name]: value
         }));
-
-        if(name === 'user') {
-            onUserSelection(impersonationForm)
-        }
     };
 
     const handleClear = () => {

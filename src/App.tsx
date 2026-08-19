@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 import AdminDashboard from "./pages/AdminDashboard";
 import SupervisorDashboard from "./pages/SupervisorDashboard";
+import FrontlineEmployeeDashboard from "./pages/FrontlineEmployeeDashboard";
 // import Unauthorized from "./components/auth/Unauthorized";
 
 export default function App() {
@@ -37,6 +38,15 @@ export default function App() {
                     element={
 						<ProtectedRoute allowedRoles={['supervisor']}>
 							<SupervisorDashboard />
+						</ProtectedRoute>
+					}
+                />                
+				
+				<Route
+                    path="/frontline"
+                    element={
+						<ProtectedRoute allowedRoles={['frontline']}>
+							<FrontlineEmployeeDashboard />
 						</ProtectedRoute>
 					}
                 />

@@ -10,11 +10,11 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({children}: DashboardLayoutProps) {
 
-    const {user} = useAuth();
+    const {user: authUser} = useAuth();
 
     return (
         <div className="min-vh-100 bg-light">
-            <Header userRole={user?.user_role ?? 'frontline'} />
+            <Header userRole={authUser?.user_role ?? 'frontline'} />
 
             <PageContainer>
                 {children}

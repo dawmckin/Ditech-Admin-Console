@@ -6,20 +6,23 @@ import AdminTabs from "../components/admin/AdminTabs";
 import SupervisorTabs from "../components/supervisor/SupervisorTabs";
 import useAuth from "../hooks/useAuth";
 import type { User } from "../types/User";
+import FrontlineEmployeeTabs from "../components/frontline-employee/FrontlineEmployeeTabs";
 
 export default function AdminDashboard() {
     const [selectedUser, setSelectedUser] = useState<ImpersonationForm>();
 
-    const {user} = useAuth();
+    const {user: authUser} = useAuth();
 
     const renderView = () => {
-        switch(selectedUser?.user_role) {
-            case 'supervisor':
-                return <SupervisorTabs user={user as User} supervisor={selectedUser}/>            
-            case 'frontline':
-                return <SupervisorTabs user={user as User}/>
-            default:
-                return <AdminTabs />
+        if(selectedUser?.user_role === 'admin' || selectedUser?.user_id === '') {
+            return <AdminTabs />
+        } else if(selectedUser?.user_id !== '') {
+            switch(selectedUser?.user_role) {
+                case 'supervisor':
+                    return <SupervisorTabs authUser={authUser as User} supervisor={selectedUser}/>            
+                case 'frontline':
+                    return <FrontlineEmployeeTabs authUser={authUser as User}/>
+            }
         }
     }
 

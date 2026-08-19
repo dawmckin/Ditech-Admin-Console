@@ -52,7 +52,7 @@ export default function ReviewDashboard({authUser, supervisor = null, onNewRevie
                                             </h5>
                                         </div>
 
-                                        <div className="px-2 flex-shrink-0">
+                                        <div className="flex-shrink-0">
                                             <ReviewProgressCircle
                                                 lastReviewDate={
                                                     user.last_review_date ?? user.start_date
