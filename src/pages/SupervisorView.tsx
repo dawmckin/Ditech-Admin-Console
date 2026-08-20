@@ -1,14 +1,14 @@
-import FrontlineEmployeeTabs from "../components/frontline-employee/FrontlineEmployeeTabs";
 import DashboardLayout from "../components/layout/DashboardLayout";
+import SupervisorTabs from "../components/supervisor/SupervisorTabs";
 import useAuth from "../hooks/useAuth";
 import type { User } from "../types/User";
 
-export default function FrontlineEmployeeDashboard() {
+export default function SupervisorView() {
     const {user: authUser} = useAuth();
     
     return (
         <DashboardLayout>
-            <FrontlineEmployeeTabs authUser={authUser as User}></FrontlineEmployeeTabs>
+            <SupervisorTabs authUser={authUser as User}></SupervisorTabs>
         </DashboardLayout>
     );
 }

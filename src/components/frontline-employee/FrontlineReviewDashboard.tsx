@@ -10,6 +10,7 @@ import type { ImpersonationForm } from "../admin/ImpersonationCard";
 import { useSelectUsers } from "../../hooks/useSelectUsers";
 import type { AccordionEventKey } from "react-bootstrap/esm/AccordionContext";
 import useReviewCategory from "../../hooks/useReviewCategory";
+import daysSinceStartDate from "../../utils/days-since-start-date";
 
 type ReviewStatusType =
     | 'complies'
@@ -75,15 +76,6 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
 
 
     }, [usersData]);
-
-    const daysSinceStartDate = (startDate: string) => {
-        const today = new Date();
-        const start = new Date(startDate);
-
-        const elapsedMs = today.getTime() - start.getTime();
-
-        return Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
-    }
 
     return (
         <div className="p-4">

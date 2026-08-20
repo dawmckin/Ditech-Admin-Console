@@ -24,71 +24,93 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
 
     const supervisorId = supervisor?.user_id ?? authUser?.user_id;
     
-    const {usersData} = useSelectUsers('pendingReview');
+    const {usersData, loading} = useSelectUsers('pendingReview');
+
+    const users = usersData.filter(user => user.supervisor_id === supervisorId);
 
     const renderPendingReviews = () => {
         return (
             <div className="review-dashboard-container d-flex flex-column gap-2">
                 {
-                    usersData.filter(user => user.supervisor_id === supervisorId).map(user => (
-                        <Accordion className="review-details-accordion p-0" 
-                            key={user.user_id}
-                            activeKey={activeUser}
-                            onSelect={(eventKey) => {
-                                setActiveUser(eventKey);
-                            }}
-                        >
-                            <Accordion.Item eventKey={user.user_id}>
-                                <Accordion.Header className={`review-dashboard-accordion-header ${user.reviews.length === 0 && Date.now() < Date.parse(user.next_review_date) ? 'prev-reviews-disabled' : ''}`}>
-                                    <div className="d-flex justify-content-between align-items-center w-100">
-                                        <div className="d-flex align-items-center">
-                                            <div className="mx-3 flex-shrink-0">
-                                                <Badge
-                                                    type="milestone"
-                                                    text={`${user.current_milestone} Day`}
-                                                />
-                                            </div>
+                    (!loading) ? 
+                    (
+                        <>
+                            {
+                                users.map(user => (
+                                    <Accordion className="review-details-accordion p-0" 
+                                        key={user.user_id}
+                                        activeKey={activeUser}
+                                        onSelect={(eventKey) => {
+                                            setActiveUser(eventKey);
+                                        }}
+                                    >
+                                        <Accordion.Item eventKey={user.user_id}>
+                                            <Accordion.Header className={`review-dashboard-accordion-header ${user.reviews.length === 0 && Date.now() < Date.parse(user.next_review_date) ? 'prev-reviews-disabled' : ''}`}>
+                                                <div className="d-flex justify-content-between align-items-center w-100">
+                                                    <div className="d-flex align-items-center">
+                                                        <div className="mx-3 flex-shrink-0">
+                                                            <Badge
+                                                                type="milestone"
+                                                                text={`${user.current_milestone} Day`}
+                                                            />
+                                                        </div>
 
-                                            <h5 className="mb-0 fw-semibold">
-                                                {`${user.first_name} ${user.last_name}`}
-                                            </h5>
-                                        </div>
+                                                        <h5 className="mb-0 fw-semibold">
+                                                            {`${user.first_name} ${user.last_name}`}
+                                                        </h5>
+                                                    </div>
 
-                                        <div className="flex-shrink-0">
-                                            <ReviewProgressCircle
-                                                lastReviewDate={
-                                                    user.last_review_date ?? user.start_date
+                                                    <div className="flex-shrink-0">
+                                                        <ReviewProgressCircle
+                                                            lastReviewDate={
+                                                                user.last_review_date ?? user.start_date
+                                                            }
+                                                            reviewIntervalDays={15}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </Accordion.Header>
+                                            <Accordion.Body>
+                                                {
+                                                    (Date.now() >= Date.parse(user.next_review_date)) &&
+                                                    <div className="d-flex justify-content-between">
+                                                        <small className="fw-semibold">Milestone reached! Sumbit a new employee review.</small>
+                                                        <Button 
+                                                            className="border text-white"
+                                                            variant="primary"
+                                                            onClick={() => onNewReview('newReview', user)}
+                                                            // disabled={}
+                                                        >
+                                                            New Review
+                                                        </Button>
+                                                    </div>
                                                 }
-                                                reviewIntervalDays={15}
-                                            />
-                                        </div>
-                                    </div>
-                                </Accordion.Header>
-                                <Accordion.Body>
-                                    {
-                                        (Date.now() >= Date.parse(user.next_review_date)) &&
-                                        <div className="d-flex justify-content-between">
-                                            <small className="fw-semibold">Milestone reached! Sumbit a new employee review.</small>
-                                            <Button 
-                                                className="border text-white"
-                                                variant="primary"
-                                                onClick={() => onNewReview('newReview', user)}
-                                                // disabled={}
-                                            >
-                                                New Review
-                                            </Button>
-                                        </div>
-                                    }
 
-                                    {
-                                        (user.reviews.length > 0) &&
-                                        <PreviousReview user={user} reviewsData={user.reviews} categories={categories} onUserChange={() => activeUser}/>
-                                    }
-                                </Accordion.Body>
-                            </Accordion.Item>
-                        </Accordion>
-                    ))
+                                                {
+                                                    (user.reviews.length > 0) &&
+                                                    <PreviousReview user={user} reviewsData={user.reviews} categories={categories} onUserChange={() => activeUser}/>
+                                                }
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                    </Accordion>
+                                ))
+                            }
+                            {
+                                (users?.length === 0) &&
+                                <div className="text-muted text-center my-auto">
+                                    <p className="">No frontline employees within their first 60 days</p>
+                                </div>
+                            }
+                        </>
+                    ) : 
+                    (
+                        <div className="text-muted text-center my-auto">
+                            <p className="">Loading...</p>
+                        </div>
+                    )
+
                 }
+
             </div>
         )
     }

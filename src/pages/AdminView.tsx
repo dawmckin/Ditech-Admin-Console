@@ -8,7 +8,7 @@ import useAuth from "../hooks/useAuth";
 import type { User } from "../types/User";
 import FrontlineEmployeeTabs from "../components/frontline-employee/FrontlineEmployeeTabs";
 
-export default function AdminDashboard() {
+export default function AdminView() {
     const [selectedUser, setSelectedUser] = useState<ImpersonationForm>();
 
     const {user: authUser} = useAuth();

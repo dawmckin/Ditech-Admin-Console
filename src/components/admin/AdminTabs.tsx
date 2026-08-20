@@ -7,11 +7,14 @@ import EmployeeReviews from "../admin/EmployeeReviews";
 import AuditLogs from "../admin/AuditLogs";
 
 import type { Tab } from "../../types/Tab";
+import useReviewCategory from "../../hooks/useReviewCategory";
 
 type AdminTab = "chat" | "employeeReviews" | "auditLogs";
 
 export default function AdminTabs() {
     const [activeTab, setActiveTab] = useState<AdminTab>('chat');
+
+    const {categories} = useReviewCategory();
 
     const tabs: Tab[] = [
         {id: 'chat', label: 'Admin Console'},
@@ -24,7 +27,7 @@ export default function AdminTabs() {
             case 'chat':
                 return <ChatInput />;
             case 'employeeReviews':
-                return <EmployeeReviews />;
+                return <EmployeeReviews categories={categories}/>;
             case 'auditLogs':
                 return <AuditLogs />;
         }

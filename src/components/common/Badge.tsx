@@ -16,7 +16,8 @@ export type BadgeType =
     | 'complies'
     | 'needs_improving'
     | 'does_not_comply'
-    | 'ready_for_review';
+    | 'ready_for_review'
+    | 'primary';
 
 export type BadgeVariant = 
     | 'primary'
@@ -91,6 +92,10 @@ export default function Badge({type, text, size = 'sm'}: BadgeProps) {
         does_not_comply: {
             icon: '',
             variant: 'danger'  
+        },
+        primary: {
+            icon: '',
+            variant: 'primary'
         }
     };
 
