@@ -1,5 +1,5 @@
 // import { useEffect, useState } from "react";
-// import { getReviewsByUser } from "../services/reviewService";
+// import { getReviews } from "../services/reviewService";
 // import type { Review } from "../types/Review";
 
 // export function useSelectReviews(user_id: string) {
@@ -10,7 +10,7 @@
 //     useEffect(() => {
 //         async function loadPrompts() {
 //             try {
-//                 const data = await getReviewsByUser(user_id);
+//                 const data = await getReviews(user_id);
 //                 setReviewsData(data);
 //             } catch(err) {
 //                 setError(err as Error)

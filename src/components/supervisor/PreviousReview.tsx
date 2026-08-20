@@ -1,6 +1,6 @@
 import { Accordion, Card, Col, ProgressBar, Row } from "react-bootstrap";
 import Badge, { type BadgeType } from "../common/Badge";
-import type { Review } from "../../types/Review";
+import type { Review, ReviewCategory } from "../../types/Review";
 import { useEffect, useState } from "react";
 import PreviousReviewDetails from "./PreviousReviewDetails";
 import type { AccordionEventKey } from "react-bootstrap/esm/AccordionContext";
@@ -20,10 +20,11 @@ interface ReviewStatusProps {
 interface PreviousReviewProps {
     user: User;
     reviewsData: Review[];
+    categories: ReviewCategory[];
     onUserChange: () => AccordionEventKey;
 }
 
-export default function PreviousReview({user, reviewsData, onUserChange}: PreviousReviewProps) {
+export default function PreviousReview({user, reviewsData, categories, onUserChange}: PreviousReviewProps) {
     // console.log(user);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [activeReview, setActiveReview] = useState<AccordionEventKey | null>(null);
@@ -119,11 +120,12 @@ export default function PreviousReview({user, reviewsData, onUserChange}: Previo
                                                                 reviewer={`${review.supervisor_data?.first_name} ${review.supervisor_data?.last_name}`}
                                                                 milestone={review.milestone} 
                                                                 prompts={review.prompts ?? []}
+                                                                categories={categories}
                                                             />
                                                         </Accordion.Body>
                                                     </Accordion.Item>
                                                 </Accordion>
-                                                <div className="d-flex flex-column">
+                                                <div className="d-flex flex-column bg-light shadow-sm border-0 rounded-1 p-1">
                                                     <small>
                                                         <span className="fw-semibold">Overall Feedback: </span>
                                                     </small>

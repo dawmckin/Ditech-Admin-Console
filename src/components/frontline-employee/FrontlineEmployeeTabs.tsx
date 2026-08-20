@@ -6,17 +6,17 @@ import FrontlineReviewDashboard from "./FrontlineReviewDashboard";
 
 import type { Tab } from "../../types/Tab";
 import type { User } from "../../types/User";
+import type { ImpersonationForm } from "../admin/ImpersonationCard";
 
 export type FrontlineEmployeeTab = "frontlineReviewDashboard";
 
 interface EmployeeTabsProps {
     authUser: User;
+    frontline?: ImpersonationForm | null;
 }
 
-export default function FrontlineEmployeeTabs({authUser}: EmployeeTabsProps) {
+export default function FrontlineEmployeeTabs({authUser, frontline = null}: EmployeeTabsProps) {
     const [activeTab, setActiveTab] = useState<FrontlineEmployeeTab>('frontlineReviewDashboard');
-    console.log(authUser);
-    // const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     const tabs: Tab[] = [
         {id: 'frontlineReviewDashboard', label: 'Review Dashboard'}
@@ -25,15 +25,10 @@ export default function FrontlineEmployeeTabs({authUser}: EmployeeTabsProps) {
     const renderTabContent = () => {
         switch(activeTab) {
             case 'frontlineReviewDashboard':
-                return <FrontlineReviewDashboard />
-                // return <ReviewDashboard 
-                //     authUser={user} 
-                //     supervisor={supervisor} 
-                //     onNewReview={(activeTab: SupervisorTab, selectedUser: User) => {
-                //         setActiveTab(activeTab);
-                //         setSelectedUser(selectedUser);
-                //     }}
-                // />;
+                return <FrontlineReviewDashboard 
+                    authUser={authUser} 
+                    frontline={frontline}
+                />
         }
     }
 

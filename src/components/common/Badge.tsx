@@ -30,10 +30,11 @@ export type BadgeVariant =
 
 interface BadgeProps {
     type: BadgeType,
-    text?: string
+    text?: string;
+    size?: string;
 }
 
-export default function Badge({type, text}: BadgeProps) {
+export default function Badge({type, text, size = 'sm'}: BadgeProps) {
     const badgeConfig: Record<BadgeType, {icon: string, variant: BadgeVariant}> = {
         review: {
             icon: "file-earmark-text",
@@ -93,13 +94,20 @@ export default function Badge({type, text}: BadgeProps) {
         }
     };
 
+    const badgeStyles: Record<string, any> = {
+        lg: {lineHeight: 2, fontSize: '1rem', borderRadius: '.375rem'},
+        md: {lineHeight: 1.5, fontSize: '.8rem', borderRadius: '.375rem', paddingLeft: '3rem', paddingRight: '3rem'},
+        sm: {}
+    }
+
     const badge = badgeConfig[type];
 
     return (
         <BootstrapBadge
             bg={badge.variant}
-            pill
+            // pill={false}
             className={`app-badge ${badge.variant === 'light' ? 'text-dark' : ''}`} 
+            style={badgeStyles[size]}
         >
             {badge.icon && <i className={`bi bi-${badge.icon}`}></i>}
 

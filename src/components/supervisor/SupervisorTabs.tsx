@@ -8,6 +8,7 @@ import type { ImpersonationForm } from "../admin/ImpersonationCard";
 
 import type { Tab } from "../../types/Tab";
 import type { User } from "../../types/User";
+import useReviewCategory from "../../hooks/useReviewCategory";
 
 export type SupervisorTab = "reviewDashboard" | "newReview";
 
@@ -20,6 +21,8 @@ export default function SupervisorTabs({authUser, supervisor = null}: Supervisor
     const [activeTab, setActiveTab] = useState<SupervisorTab>('reviewDashboard');
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
+    const {categories} = useReviewCategory();
+
     const tabs: Tab[] = [
         {id: 'reviewDashboard', label: 'Review Dashboard'},
         {id: 'newReview', label: 'Submit New Review'}
@@ -31,6 +34,7 @@ export default function SupervisorTabs({authUser, supervisor = null}: Supervisor
                 return <ReviewDashboard 
                     authUser={authUser} 
                     supervisor={supervisor} 
+                    categories={categories}
                     onNewReview={(activeTab: SupervisorTab, selectedUser: User) => {
                         setActiveTab(activeTab);
                         setSelectedUser(selectedUser);
@@ -40,6 +44,7 @@ export default function SupervisorTabs({authUser, supervisor = null}: Supervisor
                 return <NewReview 
                     authUser={authUser} 
                     supervisor={supervisor} 
+                    categories={categories}
                     selectedUser={selectedUser}
                 />;
         }

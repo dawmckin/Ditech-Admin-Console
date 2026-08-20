@@ -17,6 +17,37 @@ export async function getReviewCategories(): Promise<ReviewCategory[]> {
     return data;
 }
 
+// export async function getReviews(userId: string): Promise<Review[]> {
+//     const { data, error } = await supabase
+//         .from('reviews')
+//         .select(`
+//             *,
+//             prompts:prompt_responses!prompt_responses_review_id_fkey(
+//                 *,
+//                 category_data:prompt_responses_category_fkey (
+//                     category_title,
+//                     category_order
+//                 ),
+//                 prompt_data:prompt_responses_prompt_id_fkey (
+//                     prompt_text,
+//                     prompt_order
+//                 )
+//             ),
+//             supervisor_data:users!reviews_supervisor_id_fkey (
+//                 first_name,
+//                 last_name
+//             ),
+//             user_data:users!reviews_employee_id_fkey (*)
+//         `)
+//         .eq('employee_id', userId);
+
+//     if(error) {
+//         throw Error;
+//     }
+
+//     return data;
+// }
+
 export async function insertPromptResponses(categoryData: any, reviewId: string): Promise<InsertReviewResponse> {
     const prompts = Object.values(categoryData)
                             .flatMap((category: any) => category.prompts)

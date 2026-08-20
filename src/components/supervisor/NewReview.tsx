@@ -6,7 +6,6 @@ import ReviewCategoryInputCard from "../common/ReviewCategoryInputCard";
 import { useToast } from "../../context/ToastContext";
 
 import { useSelectUsers } from "../../hooks/useSelectUsers";
-import { useSelectReviewCategories } from "../../hooks/useSelectReviewCategories";
 import { useInsertReview } from "../../hooks/useInsertReview";
 
 import type { ReviewCategory, Prompt } from "../../types/Review";
@@ -32,10 +31,11 @@ export interface EmployeeReviewForm {
 interface NewReviewProps {
     authUser: User;
     supervisor?: ImpersonationForm | null;
+    categories: ReviewCategory[];
     selectedUser?: User | null;
 }
 
-export default function NewReview({authUser, supervisor = null, selectedUser}: NewReviewProps) {
+export default function NewReview({authUser, supervisor = null, categories: categoriesData, selectedUser}: NewReviewProps) {
     const supervisorId = supervisor?.user_id ?? authUser?.user_id;
 
     const getInitialReviewForm = (reviewSubmit: boolean = false): EmployeeReviewForm => ({
@@ -60,7 +60,6 @@ export default function NewReview({authUser, supervisor = null, selectedUser}: N
     const {showToast} = useToast();
 
     const {usersData} = useSelectUsers('all');
-    const {categoriesData} = useSelectReviewCategories();
     const {submitReview} = useInsertReview();
     const {updateUserAfterReview} = useUpdateUser();
     
@@ -196,6 +195,7 @@ export default function NewReview({authUser, supervisor = null, selectedUser}: N
     const renderReviewCategoryInputCards = () => {
         return Object.entries(reviewForm.categories ?? {}).map(cat => 
             <ReviewCategoryInputCard 
+                key={cat[0]}
                 category={cat[0] as ReviewCategoryKeyType} 
                 categoryTitle={cat[1].category_title} 
                 prompts={cat[1].prompts} 
@@ -255,7 +255,7 @@ export default function NewReview({authUser, supervisor = null, selectedUser}: N
                             <option value='' hidden>Choose a frontline team member</option>
                             {
                                 usersData.filter(user => user.user_role === 'frontline' && user.supervisor_id === supervisorId).map(user => (
-                                    <option value={user.user_id}>
+                                    <option value={user.user_id} key={user.user_id}>
                                         {`${user.first_name} ${user.last_name}`}
                                     </option>
                                 ))

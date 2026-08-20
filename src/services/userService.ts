@@ -1,6 +1,19 @@
 import { supabase } from "../lib/supabase";
 import type { UpdateUserResponse, User } from "../types/User";
 
+const usersReviewsQuery =`
+                            *,
+                            reviews!reviews_employee_id_fkey (
+                                *,
+                                supervisor_data:reviews_supervisor_id_fkey (
+                                    user_id,
+                                    first_name,
+                                    last_name
+                                ),
+                                prompts:prompt_responses!prompt_responses_review_id_fkey (*)
+                            )
+                        `
+
 export async function getUsers(): Promise<User[]> {
     const { data, error } = await supabase
         .from('users')
@@ -20,31 +33,24 @@ export async function getPendingReviewUsers(): Promise<User[]> {
 
     const { data, error } = await supabase
         .from('users')
-        .select(`
-            *,
-            reviews!reviews_employee_id_fkey (
-                *,
-                supervisor_data:reviews_supervisor_id_fkey (
-                    user_id,
-                    first_name,
-                    last_name
-                ),
-                prompts:prompt_responses!prompt_responses_review_id_fkey (
-                    *,
-                    category_data:prompt_responses_category_fkey (
-                        category_title,
-                        category_order
-                    ),
-                    prompt_data:prompt_responses_prompt_id_fkey (
-                        prompt_text,
-                        prompt_order
-                    )
-                )
-            )
-        `)
+        .select(usersReviewsQuery)
         .eq('user_role', 'frontline')
         .lte('start_date', reviewRangeDate.toISOString())
         .order('next_review_date');
+
+    if(error) {
+        throw Error;
+    }
+
+    return data;
+}
+
+export async function getSingleUserReviews(userId: string): Promise<User> {
+    const { data, error } = await supabase
+        .from('users')
+        .select(usersReviewsQuery)
+        .eq('user_id', userId)
+        .single();
 
     if(error) {
         throw Error;

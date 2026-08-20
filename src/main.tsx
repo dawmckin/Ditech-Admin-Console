@@ -7,13 +7,16 @@ import App from './App.tsx'
 
 import { AuthProvider } from './context/AuthContext.tsx';
 import { ToastProvider } from './context/ToastContext.tsx';
+import { ReviewCategoryProvider } from './context/ReviewCategoryContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
 		<AuthProvider>
-      		<ToastProvider>
-        		<App />
-      		</ToastProvider>
+			<ReviewCategoryProvider>
+				<ToastProvider>
+					<App />
+				</ToastProvider>
+			</ReviewCategoryProvider>
     	</AuthProvider>
   	</StrictMode>,
 )
