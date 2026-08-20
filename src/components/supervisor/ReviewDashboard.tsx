@@ -10,14 +10,16 @@ import type { ImpersonationForm } from "../admin/ImpersonationCard";
 import type { User } from "../../types/User";
 // import { useNavigate } from "react-router-dom";
 import type { SupervisorTab } from "./SupervisorTabs";
+import type { ReviewCategory } from "../../types/Review";
 
 interface ReviewDashboardProps {
     authUser: User;
     supervisor?: ImpersonationForm | null;
+    categories: ReviewCategory[];
     onNewReview: (activeTab: SupervisorTab, selectedUser: User) => void;
 }
 
-export default function ReviewDashboard({authUser, supervisor = null, onNewReview}: ReviewDashboardProps) {
+export default function ReviewDashboard({authUser, supervisor = null, categories, onNewReview}: ReviewDashboardProps) {
     const [activeUser, setActiveUser] = useState<AccordionEventKey | null>(null);
 
     const supervisorId = supervisor?.user_id ?? authUser?.user_id;
@@ -80,7 +82,7 @@ export default function ReviewDashboard({authUser, supervisor = null, onNewRevie
 
                                     {
                                         (user.reviews.length > 0) &&
-                                        <PreviousReview user={user} reviewsData={user.reviews} onUserChange={() => activeUser}/>
+                                        <PreviousReview user={user} reviewsData={user.reviews} categories={categories} onUserChange={() => activeUser}/>
                                     }
                                 </Accordion.Body>
                             </Accordion.Item>

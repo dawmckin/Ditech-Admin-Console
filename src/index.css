@@ -160,6 +160,10 @@ body {
     height: 4em;
 }
 
+.frontline-review-dashboard-accordion-header .accordion-button {
+    height: 5em;
+}
+
 .review-details-accordion .accordion-button {
     padding: 5px 10px;
 }
