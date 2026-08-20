@@ -5,9 +5,10 @@ import ResetPassword from "./components/auth/ResetPassword";
 
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
-import AdminDashboard from "./pages/AdminDashboard";
-import SupervisorDashboard from "./pages/SupervisorDashboard";
-import FrontlineEmployeeDashboard from "./pages/FrontlineEmployeeDashboard";
+import AdminView from "./pages/AdminView";
+import SupervisorView from "./pages/SupervisorView";
+import FrontlineEmployeeView from "./pages/FrontlineEmployeeView";
+
 // import Unauthorized from "./components/auth/Unauthorized";
 
 export default function App() {
@@ -28,7 +29,7 @@ export default function App() {
                     path="/admin"
                     element={
 						<ProtectedRoute allowedRoles={['admin']}>
-							<AdminDashboard />
+							<AdminView />
 						</ProtectedRoute>
 					}
                 />
@@ -37,7 +38,7 @@ export default function App() {
                     path="/supervisor"
                     element={
 						<ProtectedRoute allowedRoles={['supervisor']}>
-							<SupervisorDashboard />
+							<SupervisorView />
 						</ProtectedRoute>
 					}
                 />                
@@ -46,7 +47,7 @@ export default function App() {
                     path="/frontline"
                     element={
 						<ProtectedRoute allowedRoles={['frontline']}>
-							<FrontlineEmployeeDashboard />
+							<FrontlineEmployeeView />
 						</ProtectedRoute>
 					}
                 />

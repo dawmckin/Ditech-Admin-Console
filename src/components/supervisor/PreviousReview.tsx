@@ -36,7 +36,7 @@ export default function PreviousReview({user, reviewsData, categories, onUserCha
     }, [onUserChange]);
 
     useEffect(() => {
-        const formattedPrompts = reviewsData.map(review => ({
+        const formattedPrompts = reviewsData?.map(review => ({
             ...review,
             prompts: review.prompts?.map(prompt => {
                 const promptObj = {

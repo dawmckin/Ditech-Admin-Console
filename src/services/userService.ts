@@ -27,6 +27,20 @@ export async function getUsers(): Promise<User[]> {
     return data;
 }
 
+export async function getPastReviewUsers(): Promise<User[]> {
+    const { data, error } = await supabase
+        .from('users')
+        .select(usersReviewsQuery)
+        .eq('user_role', 'frontline')
+        .order('last_name');
+
+    if(error) {
+        throw Error;
+    }
+
+    return data;
+}
+
 export async function getPendingReviewUsers(): Promise<User[]> {
     const reviewRangeDate = new Date;
     reviewRangeDate.setDate(reviewRangeDate.getDate() + 60);

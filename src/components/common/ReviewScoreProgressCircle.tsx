@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 type ReviewStatusType = 'complies' | 'needs_improving' | 'does_not_comply' | 'incomplete';
 
 interface ReviewStatusConfig {
@@ -37,7 +39,17 @@ export default function ReviewScoreProgressCircle({totalScore, reviewStatus, max
     const radius = 48;
     const circumference = 2 * Math.PI * radius;
 
-    const strokeOffset = circumference * (1 - progress);
+    const targetOffset = circumference * (1 - progress);
+
+    const [strokeOffset, setStrokeOffset] = useState(circumference);
+
+    useEffect(() => {
+        const timer = requestAnimationFrame(() => {
+            setStrokeOffset(targetOffset);
+        });
+
+        return () => cancelAnimationFrame(timer);
+    }, [targetOffset]);
 
     return (
         <>
@@ -74,13 +86,12 @@ export default function ReviewScoreProgressCircle({totalScore, reviewStatus, max
                         strokeDashoffset={strokeOffset}
                         transform="rotate(-90 60 60)"
                         className={`text-${reviewStatusConfig[reviewStatus].variant}`}
+                        style={{
+                            transition: "stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)"
+                        }}
                     />
                 </svg>
                 <div className="text-center" style={{lineHeight: '.75em'}}>
-                    {/* <div className="fw-semibold" style={{fontSize: '.8em'}}>{daysRemaining}</div>
-
-                    <small className="text-muted" style={{fontSize: '.8em'}}>{(daysRemaining === 1) ? 'day': 'days'}</small> */}
-                    {/* <i className="bi bi-check-circle fs-5 text-danger"></i> */}
                     <i className={`bi bi-${reviewStatusConfig[reviewStatus].icon} text-${reviewStatusConfig[reviewStatus].variant} fs-5`}></i>
                 </div>
             </div> 
