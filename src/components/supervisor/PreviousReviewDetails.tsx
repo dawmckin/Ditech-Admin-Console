@@ -49,8 +49,6 @@ export default function PreviousReviewDetails({user, prompts, categories, review
             ])
     );
 
-    console.log(Object.entries(sortedCategorySummary));
-
     const getMilestoneDate = (reviewMilestone: string): string => {
         const milestoneAchievementDate = new Date(user.start_date);
         milestoneAchievementDate.setDate(milestoneAchievementDate.getDate() + Number.parseInt(reviewMilestone));
