@@ -56,25 +56,7 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
 
     useEffect(() => {
         setActiveReviewDetails(null);
-        // const formattedPrompts = usersData[0]?.reviews?.map(review => ({
-        //     ...review,
-        //     prompts: review.prompts?.map(prompt => {
-        //         const promptObj = {
-        //             ...prompt,
-        //             category_title: prompt.category_data?.category_title,
-        //             category_order: prompt.category_data?.category_order,
-        //             prompt_text: prompt.prompt_data?.prompt_text,
-        //             prompt_order: prompt.prompt_data?.prompt_order, 
-        //         }
-        //         delete promptObj.category_data;
-        //         delete promptObj.prompt_data;
-        //         return promptObj;
-        //     })
-        // }));
-
         setReviews(usersData[0]?.reviews as Review[]);
-
-
     }, [usersData]);
 
     return (
@@ -158,17 +140,18 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
                                                         />
                                                     </div>
 
-                                                    {/* <h5 className="mb-0 fw-semibold">
-                                                        {``}
-                                                    </h5> */}
                                                 </div>
 
-                                                <div className="d-flex mx-3 flex-shrink-0">
-                                                    <p className="total-score mx-3 mb-0">Total Score: {review.total_score} / 75</p>
-                                                    <Badge
-                                                        type={review.review_status as BadgeType}
-                                                        text={reviewStatusConfig[review.review_status as ReviewStatusType].title}
-                                                    />
+                                                <div className="d-flex flex-column mx-3 flex-shrink-0">
+                                                    <p className="total-score mb-0">Total Score: {review.total_score} / 75</p>
+                                                    <div className="text-end mt-1">
+                                                        <Badge
+                                                            type={review.review_status as BadgeType}
+                                                            text={reviewStatusConfig[review.review_status as ReviewStatusType].title}
+                                                        />
+                                                    </div>
+
+
                                                 </div>
                                             </div>
                                         </Accordion.Header>

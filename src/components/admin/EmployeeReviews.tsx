@@ -18,7 +18,6 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
     const [activeUser, setActiveUser] = useState<AccordionEventKey | null>(null);
     
     const {usersData, loading} = useSelectUsers('pastReview');
-    console.log(usersData);
 
     const users = usersData.filter(user => user.reviews.length > 0);
 
