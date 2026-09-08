@@ -43,8 +43,12 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
                                                     <div className="d-flex align-items-center">
                                                         <div className="mx-3 flex-shrink-0">
                                                             <Badge
-                                                                type="primary"
-                                                                text={`Day ${daysSinceStartDate(user?.start_date)}`}
+                                                                type={(daysSinceStartDate(user?.start_date) < 0) ? "secondary" : "primary"}
+                                                                text={
+                                                                    (daysSinceStartDate(user?.start_date) < 0) ? 
+                                                                        `Not Started` :
+                                                                        `Day ${daysSinceStartDate(user?.start_date)}`
+                                                                }
                                                             />
                                                         </div>
 

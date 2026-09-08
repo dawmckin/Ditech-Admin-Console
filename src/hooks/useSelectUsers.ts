@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getUsers, getPendingReviewUsers, getSingleUserReviews, getPastReviewUsers } from "../services/userService";
 
 import type { User } from "../types/User";
@@ -14,69 +14,52 @@ export function useSelectUsers(type: GetUsersType, userId: string = '') {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
-    useEffect(() => {
-        async function loadUsers() {
-            try {
-                const data = await getUsers();
-                setUsersData(data);
-            } catch (err) {
-                setError(err as Error);
-            } finally {
-                setLoading(false);
-            }
-        }
+    const reload = useCallback(async () => {
+        setLoading(true);
+        setError(null);
 
-        async function loadPastReviewUsers() {
-            try {
-                const data = await getPastReviewUsers();
-                setUsersData(data);
-            } catch (err) {
-                setError(err as Error);
-            } finally {
-                setLoading(false);
-            }
-        }
+        try {
+            switch (type) {
+                case "single": {
+                    if (!userId) {
+                        setUsersData([]);
+                        return;
+                    }
 
-        async function loadReviewsByUser() {
-            try {
-                if(!userId) {
-                    setUsersData([]);
-                    return;
+                    const data = await getSingleUserReviews(userId);
+                    setUsersData([data]);
+                    break;
                 }
-                const data = await getSingleUserReviews(userId);
-                setUsersData([data]);
-            } catch (err) {
-                setError(err as Error);
-            } finally {
-                setLoading(false);
-            }
-        }
 
-        async function loadPendingReviewUsers() {
-            try {
-                const data = await getPendingReviewUsers();
-                setUsersData(data);
-            } catch (err) {
-                setError(err as Error);
-            } finally {
-                setLoading(false);
-            }
-        }
+                case "pendingReview": {
+                    const data = await getPendingReviewUsers();
+                    setUsersData(data);
+                    break;
+                }
 
-        switch(type) {
-            case 'single':
-                loadReviewsByUser();
-                break;
-            case 'pendingReview':
-                loadPendingReviewUsers();
-                break;
-            case 'pastReview':
-                loadPastReviewUsers();
-                break;
-            default:
-                loadUsers();
+                case "pastReview": {
+                    const data = await getPastReviewUsers();
+                    setUsersData(data);
+                    break;
+                }
+
+                case "all":
+                default: {
+                    const data = await getUsers();
+                    setUsersData(data);
+                    break;
+                }
+            }
+        } catch (err) {
+            setError(err as Error);
+        } finally {
+            setLoading(false);
         }
     }, [type, userId]);
 
-    return {usersData, loading, error};
+    useEffect(() => {
+        reload();
+    }, [reload]);
+
+    return {usersData, loading, error, reload};
 }

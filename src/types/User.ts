@@ -8,6 +8,7 @@ export type UserRole =
 export interface User {
     user_id: string;
     email: string;
+    phone?: string;
     first_name: string;
     last_name: string;
     is_active: boolean;
@@ -15,6 +16,7 @@ export interface User {
     supervisor_id: string;
     current_milestone: string;
     start_date: string;
+    termination_date?: string;
     last_review_date: string;
     next_review_date: string;
     created_at: string;
