@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Header from "./Header";
 import PageContainer from "./PageContainer";
+import Footer from "./Footer";
 
 import useAuth from "../../hooks/useAuth";
 
@@ -19,6 +20,8 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
             <PageContainer>
                 {children}
             </PageContainer>
+
+            <Footer />
         </div>
     )
 }

@@ -1,5 +1,35 @@
 import { supabase } from "../lib/supabase";
-import type { UpdateUserResponse, User } from "../types/User";
+import type { UpdateUserResponse, User, UserRole } from "../types/User";
+
+export interface CreateEmployeeData {
+    email: string;
+    phone: string;
+    password: string;
+    first_name: string;
+    last_name: string;
+    user_role: UserRole | null;
+    supervisor_id?: string | null;
+    start_date: string | null;
+    is_active?: boolean;
+}
+
+export interface UpdateEmployeeData {
+    user_id: string;
+    email: string;
+    phone: string;
+    first_name: string;
+    last_name: string;
+    user_role: UserRole | null;
+    supervisor_id?: string | null;
+    start_date: string | null;
+    is_active?: boolean;
+}
+
+interface ManageEmployeeResponse {
+    success: boolean;
+    user?: User;
+    error?: string;
+}
 
 const usersReviewsQuery =`
                             *,
@@ -18,6 +48,8 @@ export async function getUsers(): Promise<User[]> {
     const { data, error } = await supabase
         .from('users')
         .select(`*`)
+        // .order('first_name')
+        .order('is_active', {ascending: false})
         .order('last_name');
 
     if(error) {
@@ -25,6 +57,44 @@ export async function getUsers(): Promise<User[]> {
     }
 
     return data;
+}
+
+export async function createEmployee(employee: CreateEmployeeData): Promise<User> {
+    const {data, error} = await supabase.functions.invoke<ManageEmployeeResponse>('admin-users', {
+        body: {
+            action: "create",
+            user: employee
+        },
+    })
+
+    if(error) {
+        throw error;
+    }
+
+    if(!data?.success || !data?.user) {
+        throw new Error(data?.error ?? 'Unable to create user');
+    }
+
+    return data?.user;
+}
+
+export async function updateEmployee(employee: UpdateEmployeeData): Promise<User> {
+    const {data, error} = await supabase.functions.invoke<ManageEmployeeResponse>('admin-users', {
+        body: {
+            action: "update",
+            user: employee,
+        },
+    })
+
+    if(error) {
+        throw error;
+    }
+
+    if(!data?.success || !data?.user) {
+        throw new Error(data?.error ?? 'Unable to update user');
+    }
+
+    return data?.user;
 }
 
 export async function getPastReviewUsers(): Promise<User[]> {
@@ -64,6 +134,7 @@ export async function getSingleUserReviews(userId: string): Promise<User> {
         .from('users')
         .select(usersReviewsQuery)
         .eq('user_id', userId)
+        // .order('milestone', {foreignTable: 'reviews', ascending: false})
         .single();
 
     if(error) {

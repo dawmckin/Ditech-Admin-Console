@@ -109,8 +109,16 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
                         </Col>
                         {
                             !loading && 
-                            <Col md={{span: 1, offset: 7}}>
-                                <p className="text-primary fw-semibold text-end">Day {daysSinceStartDate(usersData[0]?.start_date)}</p>
+                            <Col md={{span: 2, offset: 6}}>
+                                <p 
+                                    className={`text-${(daysSinceStartDate(usersData[0]?.start_date) < 0) ? 'secondary' : 'primary'} fw-semibold text-end`}>
+                                    {
+                                        (daysSinceStartDate(usersData[0]?.start_date) < 0) ?
+                                            'Not Started' :
+                                            `Day ${daysSinceStartDate(usersData[0]?.start_date)}`
+                                    }
+
+                                </p>
                             </Col>
                         }
                     </Row>
@@ -127,7 +135,7 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
                                 defaultActiveKey="0"
                             >
                             {(
-                                reviews?.map((review, index) => (
+                                reviews?.toReversed().map((review, index) => (
                                     <Accordion.Item eventKey={`${index}`}>
                                         <Accordion.Header className="frontline-review-dashboard-accordion-header">
                                             <div className="d-flex justify-content-between align-items-center w-100">

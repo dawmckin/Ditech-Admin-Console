@@ -17,7 +17,12 @@ export type BadgeType =
     | 'needs_improving'
     | 'does_not_comply'
     | 'ready_for_review'
-    | 'primary';
+    | 'primary'
+    | 'secondary'
+    | 'dark'
+    | 'admin'
+    | 'supervisor'
+    | 'frontline';
 
 export type BadgeVariant = 
     | 'primary'
@@ -33,9 +38,10 @@ interface BadgeProps {
     type: BadgeType,
     text?: string;
     size?: string;
+    className?: string;
 }
 
-export default function Badge({type, text, size = 'sm'}: BadgeProps) {
+export default function Badge({type, text, size = 'sm', className = ''}: BadgeProps) {
     const badgeConfig: Record<BadgeType, {icon: string, variant: BadgeVariant}> = {
         review: {
             icon: "file-earmark-text",
@@ -59,7 +65,7 @@ export default function Badge({type, text, size = 'sm'}: BadgeProps) {
         },
         milestone_light: {
             icon: 'award-fill',
-            variant: 'info'
+            variant: 'secondary'
         },
         ready_for_review: {
             icon: 'check-circle',
@@ -96,12 +102,32 @@ export default function Badge({type, text, size = 'sm'}: BadgeProps) {
         primary: {
             icon: '',
             variant: 'primary'
+        },
+        secondary: {
+            icon: '',
+            variant: 'secondary'
+        },        
+        dark: {
+            icon: '',
+            variant: 'dark'
+        },
+        admin: {
+            icon: '',
+            variant: 'info'
+        },
+        supervisor: {
+            icon: '',
+            variant: 'primary'
+        },
+        frontline: {
+            icon: '',
+            variant: 'success'
         }
     };
 
     const badgeStyles: Record<string, any> = {
         lg: {lineHeight: 2, fontSize: '1rem', borderRadius: '.375rem'},
-        md: {lineHeight: 1.5, fontSize: '.8rem', borderRadius: '.375rem', paddingLeft: '3rem', paddingRight: '3rem'},
+        md: {lineHeight: 1.5, fontSize: '.8rem', borderRadius: '.375rem', paddingLeft: 'auto', paddingRight: 'auto', width: '100%'},
         sm: {}
     }
 
@@ -111,7 +137,7 @@ export default function Badge({type, text, size = 'sm'}: BadgeProps) {
         <BootstrapBadge
             bg={badge.variant}
             // pill={false}
-            className={`app-badge ${badge.variant === 'light' ? 'text-dark' : ''}`} 
+            className={`app-badge ${badge.variant === 'light' ? 'text-dark' : ''} ${className}`} 
             style={badgeStyles[size]}
         >
             {badge.icon && <i className={`bi bi-${badge.icon}`}></i>}

@@ -1,21 +1,24 @@
-import { Badge, Container, Navbar } from "react-bootstrap";
+import { Container, Navbar } from "react-bootstrap";
 import ditechLogo from "./../../assets/images/ditech-logo.png";
+import Badge from "../common/Badge";
 
 import { useToast } from "../../context/ToastContext";
 
 import useAuth from "../../hooks/useAuth";
 import type { UserRole } from "../../types/User";
+import capitalizeString from "../../utils/capilatize-string";
 
 interface HeaderProps {
     userRole: UserRole;
 }
 
 export default function Header({userRole}: HeaderProps) {
-    const badgeText = {
-        admin: {text: 'Admin', variant: 'info'},
-        supervisor: {text: 'Supervisor', variant: 'primary'},
-        frontline: {text: 'Frontline', variant: 'success'},
+    const titles = {
+        admin: 'Admin',
+        frontline: 'Employee',
+        supervisor: 'Supervisor'
     }
+
     const {signOut} = useAuth();
     const {showToast} = useToast();
 
@@ -44,11 +47,11 @@ export default function Header({userRole}: HeaderProps) {
 
                     <div className="d-flex">
                         <div className="d-flex flex-column px-2">
-                            <h5 className="mb-0 fw-bold">Admin Console</h5>
-                            <small className="text-muted">System Management</small>
+                            <h5 className="mb-0 fw-bold">{titles[userRole]} Console</h5>
+                            <small className="text-muted">Ditech, Inc.</small>
                         </div>
-                        <div className="d-flex align-items-center">
-                            <Badge bg={badgeText[userRole]?.variant} pill>{`${badgeText[userRole]?.text}`}</Badge>
+                        <div className="d-flex align-items-center mx-3">
+                            <Badge type={userRole} text={capitalizeString(userRole)}></Badge>
                         </div>
                     </div>
                 </div>

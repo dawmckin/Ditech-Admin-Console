@@ -6,7 +6,7 @@ import type { ReviewCategoryKeyType } from "../../types/reviewCategoryKey";
 import { useState } from "react";
 import Badge from "../common/Badge";
 import type { User } from "../../types/User";
-import formatDateTime from "../../utils/format-date-time";
+import getMilestoneDate from "../../utils/get-milestone-date";
 
 interface PreviousReviewDetailsProps {
     user: User;
@@ -49,18 +49,18 @@ export default function PreviousReviewDetails({user, prompts, categories, review
             ])
     );
 
-    const getMilestoneDate = (reviewMilestone: string): string => {
-        const milestoneAchievementDate = new Date(user.start_date);
-        milestoneAchievementDate.setDate(milestoneAchievementDate.getDate() + Number.parseInt(reviewMilestone));
-        return formatDateTime(milestoneAchievementDate.toISOString(), true);
-    }
+    // const getMilestoneDate = (reviewMilestone: string): string => {
+    //     const milestoneAchievementDate = new Date(user.start_date);
+    //     milestoneAchievementDate.setDate(milestoneAchievementDate.getDate() + Number.parseInt(reviewMilestone));
+    //     return formatDateTime(milestoneAchievementDate.toISOString(), true);
+    // }
 
     return (
         <div>
             {
                 (milestone && reviewer) &&    
                 <div className="d-flex justify-content-between mb-2" style={{fontSize: '.8em'}}>
-                    <small><span className="fw-semibold">Milestone Achieved On: </span> {getMilestoneDate(milestone)}</small>
+                    <small><span className="fw-semibold">Milestone Achieved On: </span> {getMilestoneDate(milestone, user.start_date)}</small>
                     <small><span className="fw-semibold">Reviewer: </span>{reviewer}</small>
                 </div>
             }
@@ -84,6 +84,7 @@ export default function PreviousReviewDetails({user, prompts, categories, review
                                             type="category_score" 
                                             text={`${category[1].reduce((acc, prompt) => acc += prompt.score, 0)} / ${category[1].length * 3}`}
                                             size="md"
+                                            className="d-flex justify-content-center"
                                         ></Badge>
                                     </div>
                                 </th>
@@ -114,9 +115,9 @@ export default function PreviousReviewDetails({user, prompts, categories, review
                                                     >
                                                         <i className={`bi bi-${
                                                             (activeFeedbackId === prompt.id.toString() ? 
-                                                                'bi bi-chat-quote-fill' : 
-                                                                'bi bi-chat-quote'
-                                                            )} ms-2`}></i>
+                                                                'bi bi-chat-quote' : 
+                                                                'bi bi-chat-quote-fill'
+                                                            )}`}></i>
                                                     </OverlayTrigger>
                                                 )}
                                             </div>
@@ -126,6 +127,8 @@ export default function PreviousReviewDetails({user, prompts, categories, review
                                                 <Badge 
                                                     type={prompt.score === 3 ? 'prompt_score_success' : 'prompt_score'}
                                                     text={`${prompt.score} / 3`}
+                                                    size="md"
+                                                    className="d-flex justify-content-center"
                                                 ></Badge>
                                             </small>
                                         </td>

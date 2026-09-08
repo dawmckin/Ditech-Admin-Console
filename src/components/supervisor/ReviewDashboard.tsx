@@ -1,4 +1,4 @@
-import { Accordion, Button } from "react-bootstrap";
+import { Accordion, Button, OverlayTrigger } from "react-bootstrap";
 import Badge from "../common/Badge";
 
 import { useSelectUsers } from "../../hooks/useSelectUsers";
@@ -11,6 +11,7 @@ import type { User } from "../../types/User";
 // import { useNavigate } from "react-router-dom";
 import type { SupervisorTab } from "./SupervisorTabs";
 import type { ReviewCategory } from "../../types/Review";
+import Popover from "../common/Popover";
 
 interface ReviewDashboardProps {
     authUser: User;
@@ -21,6 +22,7 @@ interface ReviewDashboardProps {
 
 export default function ReviewDashboard({authUser, supervisor = null, categories, onNewReview}: ReviewDashboardProps) {
     const [activeUser, setActiveUser] = useState<AccordionEventKey | null>(null);
+    const [icon, setIcon] = useState<string>('bi-exclamation-circle-fill');
 
     const supervisorId = supervisor?.user_id ?? authUser?.user_id;
     
@@ -29,8 +31,11 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
     const users = usersData.filter(user => user.supervisor_id === supervisorId);
 
     const renderPendingReviews = () => {
+        let sixDaysAgo = new Date();
+        sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
+
         return (
-            <div className="review-dashboard-container d-flex flex-column gap-2">
+            <div className="review-dashboard-container d-flex flex-column gap-2 mt-2">
                 {
                     (!loading) ? 
                     (
@@ -75,14 +80,38 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                                                     (Date.now() >= Date.parse(user.next_review_date)) &&
                                                     <div className="d-flex justify-content-between">
                                                         <small className="fw-semibold">Milestone reached! Sumbit a new employee review.</small>
-                                                        <Button 
-                                                            className="border text-white"
-                                                            variant="primary"
-                                                            onClick={() => onNewReview('newReview', user)}
-                                                            // disabled={}
-                                                        >
-                                                            New Review
-                                                        </Button>
+                                                        <div className="d-flex align-items-center">
+                                                            {
+                                                                (new Date(user.next_review_date) < sixDaysAgo) &&
+                                                                <OverlayTrigger
+                                                                    trigger={['hover', 'focus']}
+                                                                    placement="left"
+                                                                    onToggle={(nextShow) => {
+                                                                        setIcon(nextShow ? 
+                                                                            'bi-exclamation-circle' : 
+                                                                            'bi-exclamation-circle-fill'
+                                                                        );
+                                                                    }}
+                                                                    overlay={
+                                                                        <Popover 
+                                                                            title="Review Period Surpassed"
+                                                                            body_text="Please contact your reporting manager. Performance reviews must be submitted within 5 days of milestone achievement."
+                                                                        />
+                                                                    }
+                                                                >
+                                                                    <i className={`bi ${icon} mx-3 fs-5 text-danger`}></i>
+                                                                </OverlayTrigger>
+                                                            }
+                                                            
+                                                            <Button 
+                                                                className="border text-white"
+                                                                variant={new Date(user.next_review_date) < sixDaysAgo ? 'secondary' : 'primary'}
+                                                                onClick={() => onNewReview('newReview', user)}
+                                                                disabled={new Date(user.next_review_date) < sixDaysAgo}
+                                                            >
+                                                                New Review
+                                                            </Button>
+                                                        </div>
                                                     </div>
                                                 }
 
@@ -120,6 +149,10 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
             <h4>Review Dashboard</h4>
             <small className="text-muted">View frontline employees with active and upcoming review milestones</small>
             <hr />
+
+            <small className="required-input">
+                Performance reviews must be submitted within 5 days of milestone achievement
+            </small>
 
             {renderPendingReviews()}
         </div>

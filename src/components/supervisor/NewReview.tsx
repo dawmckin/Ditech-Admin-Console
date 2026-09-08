@@ -175,7 +175,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                     last_review_date: lastReviewDate.toISOString(),
                     next_review_date: nextReviewDate.toISOString()
                 };
-
+                console.log(updatedUser);
                 const userResponse = await updateUserAfterReview(updatedUser);
                 console.log('User Updated After Review', userResponse);
 

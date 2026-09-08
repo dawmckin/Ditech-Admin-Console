@@ -10,6 +10,8 @@ export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays
     const today = new Date();
     const lastReview = new Date(lastReviewDate);
 
+    const notStarted = lastReview > today;
+
     const elapsedMs = today.getTime() - lastReview.getTime();
 
     const elapsedDays = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
@@ -27,11 +29,19 @@ export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays
 
     const renderProgress = () => {
         if(daysOverdue > 0) {
-            return (
-                <div className="mx-2">
-                    <Badge type="overdue" text={`${daysOverdue} ${(daysOverdue === 1) ? 'Day': 'Days'} Overdue`} />
-                </div>  
-            );
+            if(daysOverdue > 5) {
+                return (
+                    <div className="mx-2">
+                        <Badge type="overdue" text={`${daysOverdue} ${(daysOverdue === 1) ? 'Day': 'Days'} Overdue`} />
+                    </div>  
+                );
+            } else {
+                return (
+                    <div className="mx-2">
+                        <Badge type="overdue" text={`${daysOverdue} ${(daysOverdue === 1) ? 'Day': 'Days'} Overdue`} />
+                    </div>  
+                );
+            }
         } else if(daysRemaining === 0) {
             return (
                 <div className="mx-2">
@@ -41,7 +51,7 @@ export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays
         } else {
             return (
                 <div className="d-flex">
-                    <small className="my-auto fw-semibold">Next Review: </small>
+                    {!notStarted && <small className="my-auto fw-semibold">Next Review: </small>}  
                     <div
                         className="position-relative d-flex justify-content-center align-items-center mx-2"
                         style={{width: size, height: size}}
@@ -63,19 +73,21 @@ export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays
                             />
 
                             {/* Progress */}
-                            <circle
-                                cx="60"
-                                cy="60"
-                                r={radius}
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="10"
-                                strokeLinecap="round"
-                                strokeDasharray={circumference}
-                                strokeDashoffset={strokeOffset}
-                                transform="rotate(-90 60 60)"
-                                className="text-primary"
-                            />
+                            {
+                                !notStarted && <circle
+                                    cx="60"
+                                    cy="60"
+                                    r={radius}
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="10"
+                                    strokeLinecap="round"
+                                    strokeDasharray={circumference}
+                                    strokeDashoffset={strokeOffset}
+                                    transform="rotate(-90 60 60)"
+                                    className="text-primary"
+                                />
+                            }
                         </svg>
                         {
                             (daysRemaining <= 15) && (
@@ -83,6 +95,15 @@ export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays
                                     <div className="fw-semibold" style={{fontSize: '.8em'}}>{daysRemaining}</div>
 
                                     <small className="text-muted" style={{fontSize: '.8em'}}>{(daysRemaining === 1) ? 'day': 'days'}</small>
+                                </div>
+                            )
+                        }
+                        {
+                            (notStarted) && (
+                                <div className="text-center" style={{lineHeight: '.6em'}}>
+                                    <div className="text-muted" style={{fontSize: '.6em'}}>Not</div>
+
+                                    <div className="text-muted" style={{fontSize: '.6em'}}>Started</div>
                                 </div>
                             )
                         }
