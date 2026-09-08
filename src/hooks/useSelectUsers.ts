@@ -1,65 +1,91 @@
 import { useCallback, useEffect, useState } from "react";
-import { getUsers, getPendingReviewUsers, getSingleUserReviews, getPastReviewUsers } from "../services/userService";
+import {
+    getUsers,
+    getPendingReviewUsers,
+    getSingleUserReviews,
+    getPastReviewUsers,
+} from "../services/userService";
 
 import type { User } from "../types/User";
 
-type GetUsersType = 
-    | 'all'
-    | 'pastReview'
-    | 'pendingReview'
-    | 'single'
+type GetUsersType =
+    | "all"
+    | "pastReview"
+    | "pendingReview"
+    | "single";
 
-export function useSelectUsers(type: GetUsersType, userId: string = '') {
+export function useSelectUsers(
+    type: GetUsersType,
+    frontlineUser?: string
+) {
     const [usersData, setUsersData] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
-    const reload = useCallback(async () => {
+    const reload = useCallback(async (userId: string = ""): Promise<User[]> => {
         setLoading(true);
         setError(null);
 
         try {
             switch (type) {
+
                 case "single": {
-                    if (!userId) {
+                    if (!userId && !frontlineUser) {
                         setUsersData([]);
-                        return;
+                        return [];
                     }
 
-                    const data = await getSingleUserReviews(userId);
+                    const data = await getSingleUserReviews(frontlineUser ?? userId);
+
                     setUsersData([data]);
-                    break;
+
+                    return [data];
                 }
 
                 case "pendingReview": {
                     const data = await getPendingReviewUsers();
+
                     setUsersData(data);
-                    break;
+
+                    return data;
                 }
 
                 case "pastReview": {
                     const data = await getPastReviewUsers();
+
                     setUsersData(data);
-                    break;
+
+                    return data;
                 }
 
                 case "all":
                 default: {
                     const data = await getUsers();
+
                     setUsersData(data);
-                    break;
+
+                    return data;
                 }
             }
         } catch (err) {
-            setError(err as Error);
+            const error = err as Error;
+
+            setError(error);
+
+            throw error;
         } finally {
             setLoading(false);
         }
-    }, [type, userId]);
+    }, [type]);
 
     useEffect(() => {
         reload();
     }, [reload]);
 
-    return {usersData, loading, error, reload};
+    return {
+        usersData,
+        loading,
+        error,
+        reload,
+    };
 }

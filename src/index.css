@@ -171,10 +171,6 @@ body {
   z-index: 99999;
 }
 
-.required-input {
-  color: red;
-}
-
 .pulse-icon {
   display: inline-block;
   transform-origin: center;
@@ -242,6 +238,12 @@ body {
 .audit-log-container, .review-dashboard-container {
  	  height: 85vh;
     overflow-y: auto;
+}
+
+.manage-employees-container {
+ 	  height: 112svh;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .manage-employees-table-container {

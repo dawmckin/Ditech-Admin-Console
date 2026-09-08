@@ -46,6 +46,7 @@ export default function SupervisorTabs({authUser, supervisor = null}: Supervisor
                     supervisor={supervisor} 
                     categories={categories}
                     selectedUser={selectedUser}
+                    onSumbit={() => setActiveTab('reviewDashboard')}
                 />;
         }
     }

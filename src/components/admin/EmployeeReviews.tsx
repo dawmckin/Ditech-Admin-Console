@@ -8,7 +8,7 @@ import type { AccordionEventKey } from "react-bootstrap/esm/AccordionContext";
 import { useState } from "react";
 // import { useNavigate } from "react-router-dom";
 import type { ReviewCategory } from "../../types/Review";
-import daysSinceStartDate from "../../utils/days-since-start-date";
+import daysSinceDate from "../../utils/days-since-date";
 
 interface EmployeeReviewsProps {
     categories: ReviewCategory[];
@@ -19,7 +19,7 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
     
     const {usersData, loading} = useSelectUsers('pastReview');
 
-    const users = usersData.filter(user => user.reviews.length > 0);
+    // const users = usersData.filter(user => user.reviews.length > 0);
 
     const renderPastReviews = () => {
         return (
@@ -29,7 +29,7 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
                     (
                         <>
                             {
-                                users.map(user => (
+                                usersData.map(user => (
                                     <Accordion className="review-details-accordion p-0" 
                                         key={user.user_id}
                                         activeKey={activeUser}
@@ -43,11 +43,11 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
                                                     <div className="d-flex align-items-center">
                                                         <div className="mx-3 flex-shrink-0">
                                                             <Badge
-                                                                type={(daysSinceStartDate(user?.start_date) < 0) ? "secondary" : "primary"}
+                                                                type={(daysSinceDate(user?.start_date) < 0) ? "secondary" : "primary"}
                                                                 text={
-                                                                    (daysSinceStartDate(user?.start_date) < 0) ? 
+                                                                    (daysSinceDate(user?.start_date) < 0) ? 
                                                                         `Not Started` :
-                                                                        `Day ${daysSinceStartDate(user?.start_date)}`
+                                                                        `Day ${daysSinceDate(user?.start_date)}`
                                                                 }
                                                             />
                                                         </div>
@@ -77,7 +77,7 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
                                 ))
                             }
                             {
-                                (users?.length === 0) &&
+                                (usersData?.length === 0) &&
                                 <div className="text-muted text-center my-auto">
                                     <p className="">No frontline employees</p>
                                 </div>

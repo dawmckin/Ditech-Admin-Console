@@ -4,6 +4,8 @@ import useAuth from "../hooks/useAuth";
 import type { User } from "../types/User";
 
 export default function FrontlineEmployeeView() {
+    document.title = "Ditech Frontline Console";
+
     const {user: authUser} = useAuth();
     
     return (

@@ -1,4 +1,4 @@
-export default function daysSinceStartDate(startDate: string) {
+export default function daysSinceDate(startDate: string) {
     const today = new Date();
     const start = new Date(startDate);
 

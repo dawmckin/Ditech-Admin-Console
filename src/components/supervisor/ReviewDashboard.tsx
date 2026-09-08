@@ -12,6 +12,7 @@ import type { User } from "../../types/User";
 import type { SupervisorTab } from "./SupervisorTabs";
 import type { ReviewCategory } from "../../types/Review";
 import Popover from "../common/Popover";
+import daysSinceDate from "../../utils/days-since-date";
 
 interface ReviewDashboardProps {
     authUser: User;
@@ -31,9 +32,6 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
     const users = usersData.filter(user => user.supervisor_id === supervisorId);
 
     const renderPendingReviews = () => {
-        let sixDaysAgo = new Date();
-        sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
-
         return (
             <div className="review-dashboard-container d-flex flex-column gap-2 mt-2">
                 {
@@ -82,7 +80,7 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                                                         <small className="fw-semibold">Milestone reached! Sumbit a new employee review.</small>
                                                         <div className="d-flex align-items-center">
                                                             {
-                                                                (new Date(user.next_review_date) < sixDaysAgo) &&
+                                                                (daysSinceDate(user.next_review_date) > 5) &&
                                                                 <OverlayTrigger
                                                                     trigger={['hover', 'focus']}
                                                                     placement="left"
@@ -95,7 +93,7 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                                                                     overlay={
                                                                         <Popover 
                                                                             title="Review Period Surpassed"
-                                                                            body_text="Please contact your reporting manager. Performance reviews must be submitted within 5 days of milestone achievement."
+                                                                            body_text="Please contact your reporting manager. Performance reviews must be submitted within 5 days after milestone achievement."
                                                                         />
                                                                     }
                                                                 >
@@ -105,9 +103,9 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                                                             
                                                             <Button 
                                                                 className="border text-white"
-                                                                variant={new Date(user.next_review_date) < sixDaysAgo ? 'secondary' : 'primary'}
+                                                                variant={(daysSinceDate(user.next_review_date) > 5) ? 'secondary' : 'primary'}
                                                                 onClick={() => onNewReview('newReview', user)}
-                                                                disabled={new Date(user.next_review_date) < sixDaysAgo}
+                                                                disabled={daysSinceDate(user.next_review_date) > 5}
                                                             >
                                                                 New Review
                                                             </Button>
@@ -150,8 +148,8 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
             <small className="text-muted">View frontline employees with active and upcoming review milestones</small>
             <hr />
 
-            <small className="required-input">
-                Performance reviews must be submitted within 5 days of milestone achievement
+            <small className="text-danger">
+                Performance reviews must be submitted within 5 days after milestone achievement
             </small>
 
             {renderPendingReviews()}

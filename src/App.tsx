@@ -12,6 +12,7 @@ import FrontlineEmployeeView from "./pages/FrontlineEmployeeView";
 // import Unauthorized from "./components/auth/Unauthorized";
 
 export default function App() {
+	
     return (
         <BrowserRouter>
             <Routes>

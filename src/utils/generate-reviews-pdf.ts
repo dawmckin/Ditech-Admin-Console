@@ -5,6 +5,7 @@ import type { User } from "../types/User";
 import type { Review, ReviewCategory } from "../types/Review";
 import capitalizeString from "./capilatize-string";
 import getMilestoneDate from "./get-milestone-date";
+import daysSinceDate from "./days-since-date";
 
 interface GenerateReviewPdfProps {
     user: Omit<User, 'reviews'>;
@@ -75,20 +76,24 @@ export default function generateReviewPdf({user, reviews, categoriesData}: Gener
     doc.text("Employee Information", margin, currentY);
     currentY += 5;
 
+    let infoBody = [
+        ["Name", employeeName],
+        ["Email", user.email ?? "N/A"],
+        ["Phone", user.phone ?? "N/A"],      
+        ["Role", capitalizeString(user.user_role) ?? "N/A"],
+        ["Start Date", formatDate(user.start_date)],
+        ["Employment Duration", `${daysSinceDate(user.start_date)} days`]
+    ]
+
+    if(user.end_date) infoBody.splice(5, 0, ["End Date", formatDate(user.end_date)])
+
     autoTable(doc, {
         startY: currentY,
             theme: "grid",
         styles: {
             fontSize: 10,
         },
-        body: [
-            ["Name", employeeName],
-            ["Email", user.email ?? "N/A"],
-            ["Phone", user.phone ?? "N/A"],      
-            ["Role", capitalizeString(user.user_role) ?? "N/A"],
-            ["Start Date", formatDate(user.start_date)],
-            ["Termination Date", formatDate(user.termination_date)],
-        ],
+        body: infoBody,
         columnStyles: {
             0: {
                 fontStyle: "bold",
@@ -256,5 +261,10 @@ export default function generateReviewPdf({user, reviews, categoriesData}: Gener
 
     const safeName = employeeName.replace(/[^a-z0-9]/gi, "_");
 
-    doc.save(`${safeName}_Performance_Reviews.pdf`);
+    const pdfBlob = doc.output("blob");
+
+    return {
+        blob: pdfBlob,
+        fileName: `${safeName}_Performance_Reviews.pdf`,
+    };
 }

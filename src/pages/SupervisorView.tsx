@@ -4,6 +4,8 @@ import useAuth from "../hooks/useAuth";
 import type { User } from "../types/User";
 
 export default function SupervisorView() {
+    document.title = "Ditech Supervisor Console";
+
     const {user: authUser} = useAuth();
     
     return (

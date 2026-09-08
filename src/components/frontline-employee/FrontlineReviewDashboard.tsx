@@ -10,7 +10,7 @@ import type { ImpersonationForm } from "../admin/ImpersonationCard";
 import { useSelectUsers } from "../../hooks/useSelectUsers";
 import type { AccordionEventKey } from "react-bootstrap/esm/AccordionContext";
 import useReviewCategory from "../../hooks/useReviewCategory";
-import daysSinceStartDate from "../../utils/days-since-start-date";
+import daysSinceDate from "../../utils/days-since-date";
 
 type ReviewStatusType =
     | 'complies'
@@ -53,6 +53,8 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
     const [activeReviewDetails, setActiveReviewDetails] = useState<AccordionEventKey | null>(null);
 
     const {usersData, loading} = useSelectUsers('single', frontlineId);
+
+    console.log(usersData);
 
     useEffect(() => {
         setActiveReviewDetails(null);
@@ -111,11 +113,11 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
                             !loading && 
                             <Col md={{span: 2, offset: 6}}>
                                 <p 
-                                    className={`text-${(daysSinceStartDate(usersData[0]?.start_date) < 0) ? 'secondary' : 'primary'} fw-semibold text-end`}>
+                                    className={`text-${(daysSinceDate(usersData[0]?.start_date) < 0) ? 'secondary' : 'primary'} fw-semibold text-end`}>
                                     {
-                                        (daysSinceStartDate(usersData[0]?.start_date) < 0) ?
+                                        (daysSinceDate(usersData[0]?.start_date) < 0) ?
                                             'Not Started' :
-                                            `Day ${daysSinceStartDate(usersData[0]?.start_date)}`
+                                            `Day ${daysSinceDate(usersData[0]?.start_date)}`
                                     }
 
                                 </p>

@@ -15,7 +15,7 @@ interface HeaderProps {
 export default function Header({userRole}: HeaderProps) {
     const titles = {
         admin: 'Admin',
-        frontline: 'Employee',
+        frontline: 'Frontline',
         supervisor: 'Supervisor'
     }
 

@@ -9,23 +9,13 @@ import type { User } from "../types/User";
 import FrontlineEmployeeTabs from "../components/frontline-employee/FrontlineEmployeeTabs";
 
 export default function AdminView() {
+    document.title = "Ditech Admin Console";
+
     const [selectedUser, setSelectedUser] = useState<ImpersonationForm>();
 
     const {user: authUser} = useAuth();
 
     const renderView = () => {
-        // if((selectedUser?.user_role === 'admin' && selectedUser?.user_id === "") ||
-        //     selectedUser?.user_id !== ""
-        // ) {
-        //     switch(selectedUser?.user_role) {
-        //         case 'supervisor':
-        //             return <SupervisorTabs authUser={authUser as User} supervisor={selectedUser}/>            
-        //         case 'frontline':
-        //             return <FrontlineEmployeeTabs authUser={authUser as User} frontline={selectedUser}/>
-        //         default:
-        //             return <AdminTabs />
-        //     }
-        // }
         if(selectedUser?.user_role === 'admin' || selectedUser?.user_id === '') {
             return <AdminTabs />
         } else if(selectedUser?.user_id !== '') {

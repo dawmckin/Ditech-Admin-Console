@@ -95,7 +95,7 @@ export default function CreateEmployeeForm({supervisors, loading, onSubmit, onCa
                             First Name
                             {
                                 (employeeForm.first_name === '') &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>
@@ -118,7 +118,7 @@ export default function CreateEmployeeForm({supervisors, loading, onSubmit, onCa
                             Last Name
                             {
                                 (employeeForm.last_name === '') &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>
@@ -143,7 +143,7 @@ export default function CreateEmployeeForm({supervisors, loading, onSubmit, onCa
                             Email
                             {
                                 (employeeForm.email === '') &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>
@@ -165,7 +165,7 @@ export default function CreateEmployeeForm({supervisors, loading, onSubmit, onCa
                             Phone #
                             {
                                 (employeeForm.phone === '') &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>
@@ -195,7 +195,7 @@ export default function CreateEmployeeForm({supervisors, loading, onSubmit, onCa
                             Password
                             {
                                 (employeeForm.password === '') &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>
@@ -220,7 +220,7 @@ export default function CreateEmployeeForm({supervisors, loading, onSubmit, onCa
                             User Role
                             {
                                 (employeeForm.user_role === null) &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>                    
@@ -247,7 +247,7 @@ export default function CreateEmployeeForm({supervisors, loading, onSubmit, onCa
                                 Supervisor
                                 {
                                     (employeeForm.supervisor_id === null) &&
-                                    <span className="required-input"> *</span>
+                                    <span className="text-danger"> *</span>
                                 }
                             </small>
                         </Form.Label>                        
@@ -277,7 +277,7 @@ export default function CreateEmployeeForm({supervisors, loading, onSubmit, onCa
                             Start Date
                             {
                                 (employeeForm.start_date === null) &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>                    
