@@ -16,7 +16,7 @@ export interface User {
     supervisor_id: string;
     current_milestone: string;
     start_date: string;
-    termination_date?: string;
+    end_date?: string;
     last_review_date: string;
     next_review_date: string;
     created_at: string;

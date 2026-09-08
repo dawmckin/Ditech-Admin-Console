@@ -47,7 +47,7 @@ export default function ReviewCategoryInputCard({category, categoryTitle, prompt
                     {categoryTitle}
                     {
                         (reviewPrompts.find(prompt => prompt.score === 0)) &&
-                        <span className="required-input"> *</span>
+                        <span className="text-danger"> *</span>
                     }
                 </h5>
 

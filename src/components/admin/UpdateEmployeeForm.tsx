@@ -130,7 +130,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                             First Name
                             {
                                 (employeeForm.first_name === '') &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>
@@ -154,7 +154,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                             Last Name
                             {
                                 (employeeForm.last_name === '') &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>
@@ -181,7 +181,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                             Email
                             {
                                 (employeeForm.email === '') &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>
@@ -205,7 +205,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                             Phone #
                             {
                                 (employeeForm.phone === '') &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>
@@ -240,7 +240,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                             User Role
                             {
                                 (employeeForm.user_role === null) &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             }  
                         </small>
                     </Form.Label>                    
@@ -269,7 +269,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                                 Supervisor
                                 {
                                     (employeeForm.supervisor_id === null) &&
-                                    <span className="required-input"> *</span>
+                                    <span className="text-danger"> *</span>
                                 }
                             </small>
                         </Form.Label>                        
@@ -300,7 +300,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                             Start Date
                             {
                                 (employeeForm.start_date === null) &&
-                                <span className="required-input"> *</span>
+                                <span className="text-danger"> *</span>
                             } 
                             <OverlayTrigger
                                 trigger={['hover', 'focus']}

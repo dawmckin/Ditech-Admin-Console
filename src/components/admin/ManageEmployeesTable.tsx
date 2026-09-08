@@ -2,7 +2,7 @@ import { Button, Table } from "react-bootstrap";
 import type { User } from "../../types/User";
 import capitalizeString from "../../utils/capilatize-string";
 import Badge from "../common/Badge";
-import daysSinceStartDate from "../../utils/days-since-start-date";
+import daysSinceDate from "../../utils/days-since-date";
 
 import ActiveCircle from '../../assets/icons/active-circle.svg';
 import InactiveCircle from '../../assets/icons/inactive-circle.svg';
@@ -61,11 +61,11 @@ export default function ManageEmployeesTable({users, onEdit}: ManageEmployeesTab
                                     <td>{`${user.last_name}, ${user.first_name}`}</td>
                                     <td>
                                             <Badge
-                                                type={(daysSinceStartDate(user?.start_date) < 0) ? "secondary" : "dark"}
+                                                type={(daysSinceDate(user?.start_date) < 0) ? "secondary" : "dark"}
                                                 text={
-                                                    (daysSinceStartDate(user?.start_date) < 0) ? 
+                                                    (daysSinceDate(user?.start_date) < 0) ? 
                                                         `Not Started` :
-                                                        `Day ${daysSinceStartDate(user?.start_date)}`
+                                                        `Day ${daysSinceDate(user?.start_date)}`
                                                 }
                                                 size="md"
                                                 className="d-flex justify-content-center"

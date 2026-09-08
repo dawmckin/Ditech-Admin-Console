@@ -74,7 +74,7 @@ export default function ResetPassword() {
                                 <small>Password</small>
                                 {
                                     (password === '') &&
-                                    <span className="required-input"> *</span>
+                                    <span className="text-danger"> *</span>
                                 }      
                             </Form.Label>
 
@@ -93,7 +93,7 @@ export default function ResetPassword() {
                                 <small>Confirm Password</small>
                                 {
                                     (confirmPassword === '') &&
-                                    <span className="required-input"> *</span>
+                                    <span className="text-danger"> *</span>
                                 }      
                             </Form.Label>
 

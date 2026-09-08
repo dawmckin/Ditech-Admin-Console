@@ -8,6 +8,8 @@ import useAuth from "../../hooks/useAuth";
 import { useToast } from "../../context/ToastContext";
 
 export default function Login() {
+    document.title = "Ditech Review Console";
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -115,7 +117,7 @@ export default function Login() {
                                 <small>Email</small>
                                 {
                                     (email === '') &&
-                                    <span className="required-input"> *</span>
+                                    <span className="text-danger"> *</span>
                                 }      
                             </Form.Label>
 
@@ -133,7 +135,7 @@ export default function Login() {
                                 <small>Password</small>
                                 {
                                     (password === '') &&
-                                    <span className="required-input"> *</span>
+                                    <span className="text-danger"> *</span>
                                 }      
                             </Form.Label>
 

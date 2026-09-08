@@ -80,8 +80,7 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
             <h4>Manage Employees</h4>
             <small className="text-muted">{`Perform administrative actions (add, edit, disable users)`}</small>
 
-            {
-                (activeComponent === 'table') && 
+            {(activeComponent === 'table') && 
                 <>
                     <hr />  
                     <div>
@@ -116,13 +115,7 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
                             </Col>
                         </Row>
                     </div>
-                </>
 
-            }
-
-            {
-                (activeComponent === 'table') && 
-                <>
                     {
                         (!loadingUsers) ? 
                         (
@@ -144,25 +137,24 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
                     }
                 </>
             }
-            {
-                (activeComponent === 'download') && 
+            
+            {(activeComponent === 'download') && 
                 <DownloadReviews 
                     frontlineEmployees={usersData.filter(user => user.user_role === 'frontline')}
                     categories={categories}
                     onCancel={() => setActiveComponent('table')}
-                    onSubmit={() => setActiveComponent('table')}
                 />
             }
-            {
-                (activeComponent === 'add') && 
+
+            {(activeComponent === 'add') && 
                 <CreateEmployeeForm 
                     supervisors={usersData.filter(user => user.user_role === 'supervisor')}
                     loading={loadingManageEmployees}
                     onSubmit={(employee) => handleCreateEmployee(employee)}
                     onCancel={() => setActiveComponent('table')}
                 />
-            }            {
-            (activeComponent === 'edit' && selectedEditUser) && 
+            }            
+            {(activeComponent === 'edit' && selectedEditUser) && 
                 <UpdateEmployeeForm 
                     user={selectedEditUser}
                     supervisors={usersData.filter(user => user.user_role === 'supervisor')}
@@ -171,6 +163,7 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
                     onCancel={() => setActiveComponent('table')}
                 />
             }
+
         </div>
     );
 }

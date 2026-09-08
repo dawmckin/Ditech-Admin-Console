@@ -33,15 +33,16 @@ interface NewReviewProps {
     supervisor?: ImpersonationForm | null;
     categories: ReviewCategory[];
     selectedUser?: User | null;
+    onSumbit: () => void;
 }
 
-export default function NewReview({authUser, supervisor = null, categories: categoriesData, selectedUser}: NewReviewProps) {
+export default function NewReview({authUser, supervisor = null, categories: categoriesData, selectedUser, onSumbit}: NewReviewProps) {
     const supervisorId = supervisor?.user_id ?? authUser?.user_id;
 
     const getInitialReviewForm = (reviewSubmit: boolean = false): EmployeeReviewForm => ({
         employee_id: reviewSubmit ? '' : selectedUser?.user_id ?? '',
         supervisor_id: supervisorId ?? '',
-        review_date: new Date().toISOString().split("T")[0],
+        review_date: selectedUser?.next_review_date?.split("T")[0] ?? new Date().toISOString().split("T")[0],
         milestone: reviewSubmit ? '' : selectedUser?.current_milestone ?? '',
         categories: {},
         total_score: 0,
@@ -182,6 +183,8 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                 showToast('Success', ['Review Submitted'], 'success');
                 setReviewForm(() => getInitialReviewForm(true));
 
+                onSumbit();
+
             } catch (userError) {
                 showToast('Error', ['Unable to update user after review'], 'danger');
                 console.log('Failed to update user after review', userError);
@@ -233,6 +236,10 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                 </ul>            
             </small> 
 
+            <small className="text-danger">
+                Performance reviews must be submitted within 5 days after milestone achievement
+            </small>
+
             <hr />
 
             <Row className="g-3">
@@ -243,7 +250,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                                 Select Team Member
                                 {
                                     (reviewForm.employee_id === '') &&
-                                    <span className="required-input"> *</span>
+                                    <span className="text-danger"> *</span>
                                 }  
                             </small>
                         </Form.Label>
@@ -251,6 +258,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                             name="employee_id"
                             value={reviewForm.employee_id}
                             onChange={(e) => handleChange(e)}
+                            disabled={selectedUser === null ? false : true}
                         >
                             <option value='' hidden>Choose a frontline team member</option>
                             {
@@ -270,7 +278,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                                 Review Date
                                 {
                                     (reviewForm.review_date === '') &&
-                                    <span className="required-input"> *</span>
+                                    <span className="text-danger"> *</span>
                                 }  
                             </small>
                         </Form.Label>
@@ -280,6 +288,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                             value={reviewForm.review_date}
                             onChange={(e) => handleChange(e)} 
                             placeholder="Select a date"
+                            disabled={selectedUser === null ? false : true}
                         />
                     </Form.Group>
                 </Col>
@@ -290,7 +299,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                                 Milestone
                                 {
                                     (reviewForm.milestone === '') &&
-                                    <span className="required-input"> *</span>
+                                    <span className="text-danger"> *</span>
                                 }  
                             </small>
                         </Form.Label>
@@ -298,6 +307,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                             name="milestone"
                             value={reviewForm.milestone}
                             onChange={(e) => handleChange(e)}
+                            disabled={selectedUser === null ? false : true}
                         >
                             <option value='' hidden>Choose a milestone</option>
                             <option value='15'>15 Day</option>
@@ -322,7 +332,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                                 Final Feedback
                                 {
                                     (reviewForm.final_feedback === '') &&
-                                    <span className="required-input"> *</span>
+                                    <span className="text-danger"> *</span>
                                 }    
                             </h5>
                             <small className="text-muted">Provide overall thoughts and summary for this review</small>
