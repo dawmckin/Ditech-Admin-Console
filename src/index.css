@@ -222,11 +222,11 @@ body {
     height: 5em;
 }
 
-.review-details-accordion .accordion-button {
+.details-accordion .accordion-button {
     padding: 5px 10px;
 }
 
-.review-details-accordion .prev-reviews-disabled button {
+.details-accordion .prev-reviews-disabled button {
     cursor: not-allowed;
     pointer-events: none;
 
@@ -238,10 +238,17 @@ body {
 .audit-log-container, .review-dashboard-container {
  	  height: 85vh;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
-.manage-employees-container {
- 	  height: 112svh;
+.manage-employees-table {
+ 	  min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.manage-employees-download {
+ 	  min-height: 45vh;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -254,10 +261,10 @@ body {
     transition: all .2s ease;
 }
 
-.audit-log-card:hover {
+/* .audit-log-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.08);
-}
+} */
 
 p.total-score {
 	font-size: 1.1rem;

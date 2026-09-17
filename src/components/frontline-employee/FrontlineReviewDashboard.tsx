@@ -54,8 +54,6 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
 
     const {usersData, loading} = useSelectUsers('single', frontlineId);
 
-    console.log(usersData);
-
     useEffect(() => {
         setActiveReviewDetails(null);
         setReviews(usersData[0]?.reviews as Review[]);
@@ -133,7 +131,7 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
                     !loading ? 
                     (
                         <div className="review-dashboard-container d-flex flex-column gap-2">
-                            <Accordion className="review-details-accordion p-0"
+                            <Accordion className="details-accordion p-0"
                                 defaultActiveKey="0"
                             >
                             {(
@@ -176,7 +174,7 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
                                                 </Col>                                    
                                                 <Col md={11}>
                                                     <Accordion 
-                                                        className="review-details-accordion" 
+                                                        className="details-accordion" 
                                                         activeKey={activeReviewDetails}
                                                         onSelect={(eventKey) => {
                                                             setActiveReviewDetails(eventKey);
@@ -235,7 +233,7 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
                     ) : 
                     (
                         <div className="text-muted text-center my-auto">
-                            <p className="">Loading...</p>
+                            <p className="">Loading reviews...</p>
                         </div>
                     )
                 }

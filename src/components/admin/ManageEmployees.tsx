@@ -76,7 +76,7 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
     });
 
     return (
-        <div className="p-4">
+        <div className={`d-flex flex-column p-4 manage-employees-${activeComponent}`}>
             <h4>Manage Employees</h4>
             <small className="text-muted">{`Perform administrative actions (add, edit, disable users)`}</small>
 
@@ -110,15 +110,14 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
                                     </Button>   
                                 </OverlayTrigger>
                                 <Button variant="primary" type="button" onClick={() => setActiveComponent('add')}>
-                                    <i className="bi bi-plus-circle"></i> Add User
+                                    <i className="bi bi-plus-circle"></i> Add
                                 </Button>
                             </Col>
                         </Row>
                     </div>
 
                     {
-                        (!loadingUsers) ? 
-                        (
+                        (!loadingUsers) && 
                             <div>   
                                 <ManageEmployeesTable 
                                     users={filteredUsers}
@@ -128,12 +127,6 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
                                     }}
                                 />
                             </div>
-                        ) : 
-                        (
-                            <div className="text-muted text-center my-auto">
-                                <p className="">Loading employees...</p>
-                            </div>
-                        )
                     }
                 </>
             }
@@ -162,6 +155,12 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
                     onSubmit={(employee) => handleUpdateEmployee(employee)}
                     onCancel={() => setActiveComponent('table')}
                 />
+            }
+
+            {loadingUsers &&
+                <div className="text-muted text-center my-auto">
+                    <p className="">Loading employees...</p>
+                </div>
             }
 
         </div>

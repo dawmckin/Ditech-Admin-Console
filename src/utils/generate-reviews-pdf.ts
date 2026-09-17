@@ -76,7 +76,7 @@ export default function generateReviewPdf({user, reviews, categoriesData}: Gener
     doc.text("Employee Information", margin, currentY);
     currentY += 5;
 
-    let infoBody = [
+    let employeeInfoBody = [
         ["Name", employeeName],
         ["Email", user.email ?? "N/A"],
         ["Phone", user.phone ?? "N/A"],      
@@ -85,7 +85,7 @@ export default function generateReviewPdf({user, reviews, categoriesData}: Gener
         ["Employment Duration", `${daysSinceDate(user.start_date)} days`]
     ]
 
-    if(user.end_date) infoBody.splice(5, 0, ["End Date", formatDate(user.end_date)])
+    if(user.end_date) employeeInfoBody.splice(5, 0, ["End Date", formatDate(user.end_date)])
 
     autoTable(doc, {
         startY: currentY,
@@ -93,7 +93,39 @@ export default function generateReviewPdf({user, reviews, categoriesData}: Gener
         styles: {
             fontSize: 10,
         },
-        body: infoBody,
+        body: employeeInfoBody,
+        columnStyles: {
+            0: {
+                fontStyle: "bold",
+                cellWidth: 40,
+            },
+        },
+    });
+
+    currentY = (doc as any).lastAutoTable.finalY + 10;    
+    
+    // let reviewScoresBody = [
+    //     ["Name", employeeName],
+    //     ["Email", user.email ?? "N/A"],
+    //     ["Phone", user.phone ?? "N/A"],      
+    //     ["Role", capitalizeString(user.user_role) ?? "N/A"],
+    //     ["Start Date", formatDate(user.start_date)],
+    //     ["Employment Duration", `${daysSinceDate(user.start_date)} days`]
+    // ]
+
+    doc.setFontSize(14);
+    doc.text("Reviews", margin, currentY);
+    currentY += 5;
+
+    let reviewScoresBody = reviews.map(review => [`${review.milestone} Day`, `${review.total_score} / 75`, capitalizeString(review.review_status.replaceAll('_', ' '))]);
+
+    autoTable(doc, {
+        startY: currentY,
+            theme: "grid",
+        styles: {
+            fontSize: 10,
+        },
+        body: reviewScoresBody,
         columnStyles: {
             0: {
                 fontStyle: "bold",

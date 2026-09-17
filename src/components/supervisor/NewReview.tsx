@@ -237,7 +237,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
             </small> 
 
             <small className="text-danger">
-                Performance reviews must be submitted within 5 days after milestone achievement
+                Performance reviews must be submitted within 5 days after review milestone achievement
             </small>
 
             <hr />

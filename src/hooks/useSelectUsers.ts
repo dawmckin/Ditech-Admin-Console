@@ -76,7 +76,7 @@ export function useSelectUsers(
         } finally {
             setLoading(false);
         }
-    }, [type]);
+    }, [type, frontlineUser]);
 
     useEffect(() => {
         reload();

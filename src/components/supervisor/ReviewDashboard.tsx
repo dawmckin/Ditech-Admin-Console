@@ -1,4 +1,4 @@
-import { Accordion, Button, OverlayTrigger } from "react-bootstrap";
+import { Accordion, Button, Col, Row, OverlayTrigger } from "react-bootstrap";
 import Badge from "../common/Badge";
 
 import { useSelectUsers } from "../../hooks/useSelectUsers";
@@ -40,7 +40,7 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                         <>
                             {
                                 users.map(user => (
-                                    <Accordion className="review-details-accordion p-0" 
+                                    <Accordion className="details-accordion p-0" 
                                         key={user.user_id}
                                         activeKey={activeUser}
                                         onSelect={(eventKey) => {
@@ -48,30 +48,37 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                                         }}
                                     >
                                         <Accordion.Item eventKey={user.user_id}>
-                                            <Accordion.Header className={`review-dashboard-accordion-header ${user.reviews.length === 0 && Date.now() < Date.parse(user.next_review_date) ? 'prev-reviews-disabled' : ''}`}>
-                                                <div className="d-flex justify-content-between align-items-center w-100">
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="mx-3 flex-shrink-0">
+                                            <Accordion.Header
+                                                className={`review-dashboard-accordion-header ${
+                                                    user.reviews.length === 0
+                                                        ? "prev-reviews-disabled"
+                                                        : ""
+                                                }`}
+                                            >
+                                                <Row className="align-items-center w-100">
+                                                    <Col xs="auto" className="px-2 mx-2" style={{ width: "100px" }}>
                                                             <Badge
                                                                 type="milestone"
                                                                 text={`${user.current_milestone} Day`}
+                                                                className="d-flex justify-content-center"
                                                             />
-                                                        </div>
+                                                    </Col>
 
+                                                    <Col className="px-2">
                                                         <h5 className="mb-0 fw-semibold">
                                                             {`${user.first_name} ${user.last_name}`}
                                                         </h5>
-                                                    </div>
+                                                    </Col>
 
-                                                    <div className="flex-shrink-0">
+                                                    <Col xs="auto" className="">
                                                         <ReviewProgressCircle
                                                             lastReviewDate={
                                                                 user.last_review_date ?? user.start_date
                                                             }
                                                             reviewIntervalDays={15}
                                                         />
-                                                    </div>
-                                                </div>
+                                                    </Col>
+                                                </Row>
                                             </Accordion.Header>
                                             <Accordion.Body>
                                                 {
@@ -93,7 +100,7 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                                                                     overlay={
                                                                         <Popover 
                                                                             title="Review Period Surpassed"
-                                                                            body_text="Please contact your reporting manager. Performance reviews must be submitted within 5 days after milestone achievement."
+                                                                            body_text="Please contact your reporting manager. Performance reviews must be submitted within 5 days after review milestone achievement."
                                                                         />
                                                                     }
                                                                 >
@@ -132,7 +139,7 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                     ) : 
                     (
                         <div className="text-muted text-center my-auto">
-                            <p className="">Loading...</p>
+                            <p className="">Loading reviews...</p>
                         </div>
                     )
 
@@ -149,7 +156,7 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
             <hr />
 
             <small className="text-danger">
-                Performance reviews must be submitted within 5 days after milestone achievement
+                Performance reviews must be submitted within 5 days after review milestone achievement
             </small>
 
             {renderPendingReviews()}

@@ -79,7 +79,12 @@ export default function PreviousReview({user, reviewsData, categories, onUserCha
                         <Card.Body className="p-2">
                             <Row className="g-3">
                                 <Col md={2}>
-                                    <Badge type="milestone_light" text={`${review.milestone} Day`} />
+                                    <Badge 
+                                        type="milestone_light" 
+                                        text={`${review.milestone} Day`} 
+                                        size="md"
+                                        className="w-50"
+                                    />
                                 </Col>
 
                                 <Col md={10}>
@@ -96,7 +101,7 @@ export default function PreviousReview({user, reviewsData, categories, onUserCha
                                     <Row className="">
                                         <Col md={9}>
                                             <div className="d-flex flex-column justify-content-between h-100">
-                                                <Accordion className="review-details-accordion my-3"
+                                                <Accordion className="details-accordion my-3"
                                                     activeKey={activeReview}
                                                     onSelect={(eventKey) => {
                                                         setActiveReview(eventKey);
@@ -139,10 +144,15 @@ export default function PreviousReview({user, reviewsData, categories, onUserCha
                                             <div className="d-flex flex-column justify-content-between text-end h-100">
                                                 <div className="mt-3">
                                                     <p className="total-score mb-0">Total Score: {review.total_score} / 75</p>
-                                                    <Badge 
-                                                        type={review.review_status as BadgeType}
-                                                        text={reviewStatusMapping[review.review_status as ReviewStatusType].title}
-                                                    />                                              
+                                                    <div className="d-flex justify-content-end">
+                                                        <Badge 
+                                                            type={review.review_status as BadgeType}
+                                                            text={reviewStatusMapping[review.review_status as ReviewStatusType].title}
+                                                            size="md"
+                                                            className="w-75 d-flex justify-content-center"
+                                                        /> 
+                                                    </div>
+                                             
                                                 </div>
                                                 <div className="mt-2" style={{fontSize: '.8em'}}>
                                                     <small className="mt-auto text-muted">

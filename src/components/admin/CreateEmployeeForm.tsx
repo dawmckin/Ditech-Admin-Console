@@ -61,7 +61,7 @@ export default function CreateEmployeeForm({supervisors, loading, onSubmit, onCa
         >
             <hr />
             <div className="d-flex justify-content-between mb-2">
-                <h5>Create Employee</h5>
+                <h5>Add Employee</h5>
 
                 <Button variant="outline-danger" type="button" size="sm" onClick={onCancel}>
                     <i className="bi bi-x-lg"></i>
