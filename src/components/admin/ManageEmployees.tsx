@@ -28,8 +28,7 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
 
     const {showToast} = useToast();
     const {usersData, loading: loadingUsers, reload: reloadUsers} = useSelectUsers('all');
-    // const {usersData: downloadReviews, loading: loadingDownload} = useSelectUsers('single', selectedDownloadUser);
-    const {create, update, loading: loadingManageEmployees} = useManageEmployees();
+    const {create, update, disable, loading: loadingManageEmployees} = useManageEmployees();
 
     const handleCreateEmployee = async (employeeData: CreateEmployeeData): Promise<void> => {
         try {
@@ -55,6 +54,20 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
             setActiveComponent('table');
         } catch (err) {
             const message = (err instanceof Error) ? err.message : 'Unable to update user';
+            showToast('Error', [message], 'danger');
+        }
+    }
+
+    const handleDisableEmployee = async (employeeData: UpdateEmployeeData): Promise<void> => {
+        try {
+            const employee = await disable({...employeeData, is_active: !employeeData.is_active});
+                        
+            await reloadUsers();
+
+            showToast('User Disabled Successfully', [`${capitalizeString(employee.user_role.toLocaleUpperCase())} user disabled.`], 'success');
+            setActiveComponent('table');
+        } catch (err) {
+            const message = (err instanceof Error) ? err.message : 'Unable to disable user';
             showToast('Error', [message], 'danger');
         }
     }
@@ -152,6 +165,7 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
                     user={selectedEditUser}
                     supervisors={usersData.filter(user => user.user_role === 'supervisor')}
                     loading={loadingManageEmployees}
+                    onDisable={(employee) => handleDisableEmployee(employee)}
                     onSubmit={(employee) => handleUpdateEmployee(employee)}
                     onCancel={() => setActiveComponent('table')}
                 />

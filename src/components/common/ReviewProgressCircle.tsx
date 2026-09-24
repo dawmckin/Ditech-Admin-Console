@@ -4,9 +4,10 @@ interface ReviewProgressCircleProps {
     lastReviewDate: string;
     reviewIntervalDays: number;
     size?: number;
+    allMilestonesCompleted?: boolean;
 }
 
-export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays, size = 50}: ReviewProgressCircleProps) {
+export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays, size = 50, allMilestonesCompleted}: ReviewProgressCircleProps) {
     const today = new Date();
     const lastReview = new Date(lastReviewDate);
 
@@ -29,19 +30,20 @@ export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays
 
     const renderProgress = () => {
         if(daysOverdue > 0) {
-            if(daysOverdue > 5) {
                 return (
                     <div className="mx-2">
                         <Badge type="overdue" text={`${daysOverdue} ${(daysOverdue === 1) ? 'Day': 'Days'} Overdue`} />
                     </div>  
                 );
-            } else {
-                return (
-                    <div className="mx-2">
-                        <Badge type="overdue" text={`${daysOverdue} ${(daysOverdue === 1) ? 'Day': 'Days'} Overdue`} />
-                    </div>  
-                );
-            }
+            // if(daysOverdue > 5) {
+
+            // } else {
+            //     return (
+            //         <div className="mx-2">
+            //             <Badge type="overdue" text={`${daysOverdue} ${(daysOverdue === 1) ? 'Day': 'Days'} Overdue`} />
+            //         </div>  
+            //     );
+            // }
         } else if(daysRemaining === 0) {
             return (
                 <div className="mx-2">

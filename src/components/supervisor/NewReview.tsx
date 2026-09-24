@@ -51,6 +51,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
     });
 
     const [reviewForm, setReviewForm] = useState<EmployeeReviewForm>(getInitialReviewForm);
+    const [submitTriggered, setSubmitTriggered] = useState(false);
 
     const reviewStatusMappings: Record<string, string> = {
         complies: 'Complies',
@@ -131,6 +132,8 @@ export default function NewReview({authUser, supervisor = null, categories: cate
     };
 
     const handleSubmit = async () => {
+        setSubmitTriggered(true);
+
         const missingScores = Object.values(reviewForm.categories)
             .flatMap((category) => 
                 category.prompts.filter((prompt) => prompt.score === 0)
@@ -146,7 +149,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
 
         const formattedCounts = Object.entries(categoryCounts)
             .map(([category, count]) => 
-                `${mapReviewCategory(category as ReviewCategoryKeyType)}: ${count}`
+                `${mapReviewCategory(category as ReviewCategoryKeyType)}: ${count} score${count > 1 ? 's' : ''}`
             );
         
         if(missingScores.length > 0) {
@@ -201,7 +204,8 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                 key={cat[0]}
                 category={cat[0] as ReviewCategoryKeyType} 
                 categoryTitle={cat[1].category_title} 
-                prompts={cat[1].prompts} 
+                prompts={cat[1].prompts}
+                submitTriggered={submitTriggered}
                 onCardChange={(reviewPrompt) => handleCardChange(reviewPrompt)}
             />
         )
@@ -345,6 +349,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                                     placeholder="Enter your final feedback and overall assessment..."
                                     value={reviewForm.final_feedback}
                                     onChange={(e) => handleChange(e)}
+                                    className={(submitTriggered && reviewForm.final_feedback === '') ? 'border-danger' : ''}
                                 />
 
                             </Form.Group>

@@ -98,6 +98,12 @@ export default function ManageEmployeesTable({users, onEdit}: ManageEmployeesTab
                         }
                     </tbody>
                 </Table>
+
+            {(users.length === 0) && (
+                <div className="text-muted text-center my-auto">
+                    <p>No employees to show</p>
+                </div>
+            )}
             </div>
 
             <Pagination

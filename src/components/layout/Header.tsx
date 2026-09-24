@@ -24,7 +24,7 @@ export default function Header({userRole}: HeaderProps) {
 
     const handleLogout = async () => {
         await signOut();
-        showToast('Logout Successful', [''], 'success');
+        showToast('Logout Successful', ['Signed Out'], 'success');
     }
 
     return (

@@ -48,7 +48,6 @@ export async function getUsers(): Promise<User[]> {
     const { data, error } = await supabase
         .from('users')
         .select(`*`)
-        // .order('first_name')
         .order('is_active', {ascending: false})
         .order('last_name');
 
@@ -97,11 +96,31 @@ export async function updateEmployee(employee: UpdateEmployeeData): Promise<User
     return data?.user;
 }
 
+export async function disableEmployee(employee: UpdateEmployeeData): Promise<User> {
+    const {data, error} = await supabase.functions.invoke<ManageEmployeeResponse>('admin-users', {
+        body: {
+            action: "disable",
+            user: employee,
+        },
+    })
+
+    if(error) {
+        throw error;
+    }
+
+    if(!data?.success || !data?.user) {
+        throw new Error(data?.error ?? 'Unable to disable user');
+    }
+
+    return data?.user;
+}
+
 export async function getPastReviewUsers(): Promise<User[]> {
     const { data, error } = await supabase
         .from('users')
         .select(usersReviewsQuery)
         .eq('user_role', 'frontline')
+        .order('is_active', {ascending: false})
         .order('last_name');
 
     if(error) {
@@ -113,13 +132,15 @@ export async function getPastReviewUsers(): Promise<User[]> {
 
 export async function getPendingReviewUsers(): Promise<User[]> {
     const reviewRangeDate = new Date;
-    reviewRangeDate.setDate(reviewRangeDate.getDate() + 60);
+    reviewRangeDate.setDate(reviewRangeDate.getDate() + 66);
 
     const { data, error } = await supabase
         .from('users')
         .select(usersReviewsQuery)
         .eq('user_role', 'frontline')
+        .neq('current_milestone', '75')
         .lte('start_date', reviewRangeDate.toISOString())
+        .order('is_active', {ascending: false})
         .order('next_review_date');
 
     if(error) {

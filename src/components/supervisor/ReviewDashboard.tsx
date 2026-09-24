@@ -50,7 +50,8 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                                         <Accordion.Item eventKey={user.user_id}>
                                             <Accordion.Header
                                                 className={`review-dashboard-accordion-header ${
-                                                    user.reviews.length === 0
+                                                    user.reviews.length === 0 &&
+                                                    Date.now() < Date.parse(user.next_review_date)
                                                         ? "prev-reviews-disabled"
                                                         : ""
                                                 }`}

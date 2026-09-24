@@ -20,6 +20,7 @@ import {
     sendResetEmail as authSendResetEmail,
     resetPassword as authResetPassword
 } from "../services/authService";
+import { updateEmployee, type UpdateEmployeeData } from "../services/userService";
 
 interface AuthContextProps {
     children: ReactNode

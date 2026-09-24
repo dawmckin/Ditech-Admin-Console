@@ -4,7 +4,7 @@ import { Row, Col, Form, Button, OverlayTrigger } from "react-bootstrap";
 
 import type { UpdateEmployeeData } from "../../services/userService";
 import formatPhoneNumber from "../../utils/format-phone";
-import type { User } from "../../types/User";
+import type { User, UserRole } from "../../types/User";
 import Popover from "../common/Popover";
 import { useToast } from "../../context/ToastContext";
 
@@ -12,11 +12,13 @@ interface UpdateEmployeeFormProps {
     user: User | null;
     supervisors: User[];
     loading: boolean;
+    onDisable: (employee: UpdateEmployeeData) => Promise<void>;
     onSubmit: (employee: UpdateEmployeeData) => Promise<void>;
     onCancel: () => void;
 }
 
-export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit, onCancel}: UpdateEmployeeFormProps) {
+export default function UpdateEmployeeForm({user, supervisors, loading, onDisable, onSubmit, onCancel}: UpdateEmployeeFormProps) {
+    const [formAction, setFormAction] = useState('');
     const [employeeForm, setEmployeeForm] = useState<UpdateEmployeeData>({
         user_id: "",
         email: "",
@@ -64,6 +66,8 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
     const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         const form = e.currentTarget;
         e.preventDefault();
+
+        setFormAction('submit');
 
         if(!form.checkValidity()) {
             e.stopPropagation();
@@ -141,6 +145,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                         value={employeeForm.first_name}
                         placeholder="Enter First Name"
                         onChange={handleChange}
+                        disabled={!employeeForm.is_active}
                         className={(employeeForm.first_name && employeeForm.first_name !== user?.first_name) ? 'edited' : ''}
                     />
                     <Form.Control.Feedback type="invalid">
@@ -165,6 +170,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                         value={employeeForm.last_name}
                         placeholder="Enter Last Name"
                         onChange={handleChange}
+                        disabled={!employeeForm.is_active}
                         className={(employeeForm.last_name && employeeForm.last_name !== user?.last_name) ? 'edited' : ''}
 
                     />
@@ -192,6 +198,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                         value={employeeForm.email}
                         placeholder="Enter Email"
                         onChange={handleChange}
+                        disabled={!employeeForm.is_active}
                         className={(employeeForm.email && employeeForm.email !== user?.email) ? 'edited' : ''}
 
                     />    
@@ -224,6 +231,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                                 phone: digitsOnly
                             }))
                         }}
+                        disabled={!employeeForm.is_active}
                         className={(employeeForm.phone && employeeForm.phone !== user?.phone) ? 'edited' : ''}
 
                     /> 
@@ -248,7 +256,14 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                         required
                         name="user_role"
                         value={employeeForm.user_role ?? ""}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                            setEmployeeForm(prev => ({
+                                ...prev, 
+                                supervisor_id: e.target.value === 'frontline' ? employeeForm.supervisor_id : null,
+                                user_role: e.target.value as UserRole
+                            }));
+                        }}
+                        disabled={!employeeForm.is_active}
                         className={(employeeForm.user_role && employeeForm.user_role !== user?.user_role) ? 'edited' : ''}
 
                     >
@@ -279,6 +294,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                             name="supervisor_id"
                             value={employeeForm.supervisor_id ?? ""}
                             onChange={handleChange}
+                            disabled={!employeeForm.is_active}
                             className={(employeeForm.supervisor_id && employeeForm.supervisor_id !== user?.supervisor_id) ? 'edited' : ''}
                         >
                             <option value="" hidden>Select Supervisor</option>
@@ -327,7 +343,7 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
                         name="start_date"
                         value={employeeForm.start_date?.split('T')[0] ?? ""} 
                         onChange={handleChange}
-                        disabled={employeeForm.start_date ? new Date(employeeForm.start_date) <= today : false}
+                        disabled={(employeeForm.start_date ? new Date(employeeForm.start_date) <= today : false) || !employeeForm.is_active}
                         className={(employeeForm.start_date && employeeForm.start_date !== user?.start_date) ? 'edited' : ''}
                     />
                     <Form.Control.Feedback type="invalid">
@@ -337,9 +353,31 @@ export default function UpdateEmployeeForm({user, supervisors, loading, onSubmit
             </Row>
             
             <div className="d-flex justify-content-end">
-                <Button variant="primary" type="submit" disabled={loading}>
-                    {loading ? "Updating..." : "Update Employee"}
+                <Button 
+                    variant={employeeForm.is_active ? "outline-danger" : "outline-success"} 
+                    type="button" 
+                    onClick={() => {
+                        setFormAction('user_status');
+                        onDisable(employeeForm)
+                    }}
+                    disabled={loading} 
+                    className={employeeForm.is_active ? 'mx-3' : ''}>
+                    {
+                        (loading && formAction === 'user_status') 
+                            ? employeeForm.is_active 
+                                ? "Disabling..." 
+                                : "Enabling..." 
+                            : employeeForm.is_active 
+                                ? "Disable Employee" 
+                                : "Enable Employee"
+                    }
                 </Button>
+                {
+                    employeeForm.is_active &&
+                        <Button variant="primary" type="submit" disabled={loading}>
+                            {(loading && formAction === 'submit') ? "Updating..." : "Update Employee"}
+                        </Button>
+                }
             </div>
 
         </Form>

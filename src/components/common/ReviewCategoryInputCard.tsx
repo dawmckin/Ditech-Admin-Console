@@ -10,10 +10,11 @@ interface ReviewCategoryInputCardProps {
     category: ReviewCategoryKeyType,
     categoryTitle: string,
     prompts: Prompt[],
-    onCardChange: (reviewPrompt: Prompt[]) => void
+    submitTriggered: boolean,
+    onCardChange: (reviewPrompt: Prompt[]) => void,
 }
 
-export default function ReviewCategoryInputCard({category, categoryTitle, prompts, onCardChange}: ReviewCategoryInputCardProps) {
+export default function ReviewCategoryInputCard({category, categoryTitle, prompts, submitTriggered, onCardChange}: ReviewCategoryInputCardProps) {
     const [reviewPrompts, setReviewPrompts] = useState<Prompt[]>(prompts);
 
     const categoryNotes = reviewPrompts.filter(prompt => prompt.prompt_note).map(prompt => prompt.prompt_note);
@@ -54,7 +55,7 @@ export default function ReviewCategoryInputCard({category, categoryTitle, prompt
                 {reviewPrompts?.map((prompt) => (
                     <div key={prompt.id} className="mb-2">
                         <small>
-                            <Form.Label className="fw-semibold">
+                            <Form.Label className={`fw-semibold ${(submitTriggered && reviewPrompts.find(p => p.id === prompt.id)?.score === 0) ? 'text-danger' : ''}`}>
                                 {`${prompt.prompt_text}${categoryNotes.includes(prompt.prompt_note) ? '*'.repeat(categoryNotes.indexOf(prompt.prompt_note) + 1) : ''}`}
                             </Form.Label>
                         </small>

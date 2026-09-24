@@ -103,74 +103,111 @@ export default function DownloadReviews({frontlineEmployees, categories, onCance
     }
 
     return (
-        <>
-            <Form 
-                noValidate
-                onSubmit={(e) => {
-                    handlePreview(e);
-                }}
-            >
+        <div className="d-flex flex-column h-100">
+            <div className="mb-3">
                 <hr />
+
                 <div className="d-flex justify-content-between mb-2">
                     <h5>Download Performance Reviews</h5>
 
-                    <Button variant="outline-danger" type="button" size="sm" onClick={onCancel}>
+                    <Button
+                        variant="outline-danger"
+                        type="button"
+                        size="sm"
+                        onClick={onCancel}
+                    >
                         <i className="bi bi-x-lg"></i>
                     </Button>
                 </div>
+            </div>
 
-                <Row className="mt-5 ">
+            <Form
+                noValidate
+                onSubmit={handlePreview}
+                className="mt-auto"
+            >
 
-                    <Form.Group as={Col} md={3} className="mb-3" controlId="employee_id">
-                        <Form.Select 
+                <Row className="mt-5">
+
+                    <Form.Group
+                        as={Col}
+                        md={3}
+                        controlId="employee_id"
+                    >
+                        <Form.Select
                             required
-                            // isValid={validated && (employeeForm.user_role !== 'frontline' || employeeForm.supervisor_id !== null)}
                             name="employee_id"
                             value={selectedEmployee ?? ""}
                             onChange={(e) => {
                                 setSelectedEmployee(e.target.value);
                                 setPdfUrl(null);
-                                setPdfFileName('');
+                                setPdfFileName("");
                                 setShowPreviewButton(true);
                             }}
                         >
-                            <option value="" hidden>Select Frontline Employee</option>
-                            {
-                                frontlineEmployees.filter(emp => emp.user_role === 'frontline').map(user => (
-                                    <option value={user.user_id}>{`${user.first_name} ${user.last_name}`}</option>
-                                ))
-                            }
+                            <option value="" hidden>
+                                Select Frontline Employee
+                            </option>
+
+                            {frontlineEmployees
+                                .filter(emp => emp.user_role === "frontline")
+                                .map(user => (
+                                    <option
+                                        key={user.user_id}
+                                        value={user.user_id}
+                                    >
+                                        {user.first_name} {user.last_name}
+                                    </option>
+                                ))}
                         </Form.Select>
                     </Form.Group>
-                    <Col md={{span: 2, offset: 7}}>
-                        {showPreviewButton &&
-                            <div className="d-flex justify-content-end">
-                                <Button 
-                                    variant={generatingPdf ? 'secondary' : 'primary'} 
-                                    type="submit" 
-                                >
-                                    {generatingPdf ? 'Generating...' : 'Preview Reviews'}
-                                </Button>
-                            </div>
-                        }
-                        {pdfUrl &&
+
+                    <Col md={{ span: 2, offset: 7 }}>
+                        {showPreviewButton && (
                             <div className="d-flex justify-content-end">
                                 <Button
-                                    variant={downloading ? 'secondary' : 'primary'}
+                                    variant={
+                                        generatingPdf
+                                            ? "secondary"
+                                            : "primary"
+                                    }
+                                    type="submit"
+                                >
+                                    {generatingPdf
+                                        ? "Generating..."
+                                        : "Preview Reviews"}
+                                </Button>
+                            </div>
+                        )}
+
+                        {pdfUrl && (
+                            <div className="d-flex justify-content-end">
+                                <Button
+                                    variant={
+                                        downloading
+                                            ? "secondary"
+                                            : "primary"
+                                    }
+                                    type="button"
                                     onClick={handleDownload}
                                     disabled={downloading}
                                 >
                                     <i className="bi bi-download me-2" />
-                                    {downloading ? 'Downloading...' : 'Download'}
-                                </Button>                            
+
+                                    {downloading
+                                        ? "Downloading..."
+                                        : "Download"}
+                                </Button>
                             </div>
-                        }
+                        )}
                     </Col>
+
                 </Row>
             </Form>
-            
+
+            {/* PDF Preview */}
             {pdfUrl && (
-                <div className="mt-4">
+                <div className="flex-grow-1 mt-4 overflow-auto">
                     <div className="d-flex justify-content-between align-items-center mb-2">
                         <h6 className="mb-0">
                             PDF Preview
@@ -189,7 +226,7 @@ export default function DownloadReviews({frontlineEmployees, categories, onCance
                     />
                 </div>
             )}
-        </>
 
+        </div>
     );
 }

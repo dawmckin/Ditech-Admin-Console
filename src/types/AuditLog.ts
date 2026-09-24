@@ -34,5 +34,6 @@ export interface AuditLog {
     actor?: {
         first_name: string | null;
         last_name: string | null;
+        user_role: string | null;
     } | null;
 }

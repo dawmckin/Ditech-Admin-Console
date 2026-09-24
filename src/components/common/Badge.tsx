@@ -5,6 +5,8 @@ import './Badge.css';
 export type BadgeType = 
     | 'user_created'
     | 'user_updated' 
+    | 'user_disabled'
+    | 'user_enabled'
     | 'review_submitted'
     | 'details_value'
     | 'milestone'
@@ -42,15 +44,22 @@ interface BadgeProps {
 }
 
 export default function Badge({type, text, size = 'sm', className = ''}: BadgeProps) {
-    console.log(text);
     const badgeConfig: Record<BadgeType, {icon: string, variant: BadgeVariant}> = {
         user_created: {
             icon: "person-fill-add",
             variant: "success",
         },
         user_updated: {
-            icon: "person-fill-check",
+            icon: "person-fill-exclamation",
             variant: "warning",
+        },
+        user_disabled: {
+            icon: "person-fill-slash",
+            variant: "danger",
+        },
+        user_enabled: {
+            icon: "person-fill-check",
+            variant: "success",
         },
         review_submitted: {
             icon: "file-earmark-text-fill",

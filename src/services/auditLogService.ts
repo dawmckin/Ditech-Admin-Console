@@ -8,7 +8,8 @@ export async function getAuditLogs(): Promise<AuditLog[]> {
             *,
             actor:users!audit_logs_actor_user_id_fkey (
                 first_name,
-                last_name
+                last_name,
+                user_role
             )
         `)
         .order("created_at", { ascending: false });

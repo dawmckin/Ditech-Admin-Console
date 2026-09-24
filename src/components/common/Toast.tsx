@@ -8,10 +8,11 @@ interface ToastProps {
     header: string,
     message: string[],
     type: ToastType,
+    duration?: number,
     onClose: (id: string) => void
 }
 
-export default function Toast({id, header, message, type = 'success', onClose}: ToastProps) {
+export default function Toast({id, header, message, type = 'success', duration = 5000, onClose}: ToastProps) {
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
@@ -21,11 +22,11 @@ export default function Toast({id, header, message, type = 'success', onClose}: 
 
         const exitTimer = setTimeout(() => {
             setVisible(false);
-        }, 10500);
+        }, duration + 500);
 
         const removeTimer = setTimeout(() => {
             onClose(id);
-        }, 10550);
+        }, duration + 550);
 
         return () => {
             clearTimeout(enterTimer);

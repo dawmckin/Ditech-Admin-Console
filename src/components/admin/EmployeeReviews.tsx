@@ -16,6 +16,7 @@ type ReviewsFilterType =
     | 'pendingMilestone'
     | 'readyForReview' 
     | 'pastReviewPeriod'
+    | 'milestonesCompleted'
 
 interface EmployeeReviewsProps {
     categories: ReviewCategory[];
@@ -26,9 +27,6 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
     const [filter, setFilter] = useState<ReviewsFilterType>('all');
     
     const {usersData, loading} = useSelectUsers('pastReview');
-
-    // const users = usersData.filter(user => user.reviews.length > 0);
-
 
     // search
     const [searchTerm, setSearchTerm] = useState("");
@@ -41,24 +39,20 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
             user.first_name?.toLowerCase().includes(search) ||
             user.last_name?.toLowerCase().includes(search);
 
-        // Review status filter
-        // const daysSinceStart = daysSinceDate(user.start_date);
-        // const hasReviews = user.reviews?.length > 0;
-        // const reviewDate = Date.parse(user.next_review_date);
-        // const now = Date.now();
-
         let matchesFilter = true;
 
         switch (filter) {
             case "pendingMilestone":
-                // Employee has reached a milestone but hasn't completed a review
+                // Employee is some days away from review period
                 matchesFilter =
+                    matchesFilter = user.current_milestone !== '75' &&
                     daysSinceDate(user.next_review_date) < 0;
                 break;
 
             case "readyForReview":
-                // Employee is within the review period
+                // Employee has reached review period
                 matchesFilter =
+                    matchesFilter = user.current_milestone !== '75' &&
                     daysSinceDate(user.next_review_date) >= 0 &&
                     daysSinceDate(user.next_review_date) <= 5;
                 break;
@@ -66,10 +60,16 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
             case "pastReviewPeriod":
                 // Employee is beyond the review period
                 matchesFilter =
+                    matchesFilter = user.current_milestone !== '75' &&
                     daysSinceDate(user.next_review_date) > 5;
                 break;
-
+            case "milestonesCompleted":
+                // Employee has completed all previous review periods
+                matchesFilter = user.current_milestone === '75';
+                break;
             case "all":
+                matchesFilter = true;
+                break;
             default:
                 matchesFilter = true;
         }
@@ -88,14 +88,18 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
                             placeholder="Search employees..."
                         />                    
                     </Col>
-                    <Col md={{span: 3, offset: 6}} className="d-flex justify-content-end">
+                    <Col md={{span: 3, offset: 6}} className="d-flex justify-content-end align-items-center">
+                        <Form.Label className="mx-2 mb-0">
+                            Filter: 
+                        </Form.Label>
                         <Form.Select
                             value={filter}
                             onChange={(e) => setFilter(e.target.value as ReviewsFilterType)}
                             className="w-75"
                         >
                             <option value="" hidden>Select filter</option>
-                            <option value="all" >All</option>
+                            <option value="all" >All Employees</option>
+                            <option value="milestonesCompleted">Milestones Completed</option>
                             <option value="pastReviewPeriod">Past Review Period</option>
                             <option value="pendingMilestone">Pending Milestone</option>
                             <option value="readyForReview">Ready For Review</option>
@@ -122,8 +126,7 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
                                             <Accordion.Item eventKey={user.user_id}>
                                                 <Accordion.Header
                                                     className={`review-dashboard-accordion-header ${
-                                                        user.reviews.length === 0 &&
-                                                        Date.now() < Date.parse(user.next_review_date)
+                                                        user.reviews.length === 0
                                                             ? "prev-reviews-disabled"
                                                             : ""
                                                     }`}
@@ -152,12 +155,25 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
                                                         </Col>
 
                                                         <Col xs="auto" className="">
-                                                            <ReviewProgressCircle
-                                                                lastReviewDate={
-                                                                    user.last_review_date ?? user.start_date
-                                                                }
-                                                                reviewIntervalDays={15}
-                                                            />
+                                                            {
+                                                                (Number.parseInt(user.current_milestone) === 75) ? 
+                                                                (
+                                                                    <Badge
+                                                                        type='secondary'
+                                                                        text='All Milestones Reached'
+                                                                        className="d-flex justify-content-center"
+                                                                    />
+                                                                ) : 
+                                                                (
+                                                                    <ReviewProgressCircle
+                                                                        lastReviewDate={
+                                                                            user.last_review_date ?? user.start_date
+                                                                        }
+                                                                        reviewIntervalDays={15}
+                                                                    />
+                                                                )
+                                                            }
+
                                                         </Col>
                                                     </Row>
                                                 </Accordion.Header>
@@ -171,7 +187,7 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
                                         </Accordion>
                                     ))
                                 }
-                                {filteredUsers.length === 0 && !loading && (
+                                {(filteredUsers.length === 0 && !loading) && (
                                     <div className="text-muted text-center my-auto">
                                         <p>
                                             {usersData.length === 0

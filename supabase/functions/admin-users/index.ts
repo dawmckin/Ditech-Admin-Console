@@ -3,6 +3,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 interface UserData {
     user_id?: string;
     email: string;
+    phone: string;
     first_name: string;
     last_name: string;
     user_role: "admin" | "supervisor" | "frontline";
@@ -13,7 +14,7 @@ interface UserData {
 }
 
 interface RequestBody {
-    action: "create" | "update" | "delete";
+    action: "create" | "update" | "disable";
     user?: UserData;
     user_id?: string;
 }
@@ -86,23 +87,23 @@ Deno.serve(async (req) => {
 
 		const secretKeysRaw = Deno.env.get("SUPABASE_SECRET_KEYS");
 
-		console.log(
-			"SUPABASE_URL exists:",
-			!!Deno.env.get("SUPABASE_URL")
-		);
+		// console.log(
+		// 	"SUPABASE_URL exists:",
+		// 	!!Deno.env.get("SUPABASE_URL")
+		// );
 
-		console.log(
-			"SUPABASE_SECRET_KEYS exists:",
-			!!secretKeysRaw
-		);
+		// console.log(
+		// 	"SUPABASE_SECRET_KEYS exists:",
+		// 	!!secretKeysRaw
+		// );
 
 		if (secretKeysRaw) {
 			const secretKeys = JSON.parse(secretKeysRaw);
 
-			console.log(
-				"Secret key names:",
-				Object.keys(secretKeys)
-			);
+			// console.log(
+			// 	"Secret key names:",
+			// 	Object.keys(secretKeys)
+			// );
 		}
 
 		const secretKeys = JSON.parse(
@@ -181,7 +182,7 @@ Deno.serve(async (req) => {
                         email: user.email,
                         phone: user.phone,
 						password: user.password,
-                        email_confirm: false,
+                        email_confirm: true,
                         user_metadata: {
                             first_name: user.first_name,
                             last_name: user.last_name,
@@ -202,26 +203,21 @@ Deno.serve(async (req) => {
                 const {
                     data: profile,
                     error: profileError,
-                } = await supabaseAdmin
-                    .from("users")
-                    .insert({
-                        user_id: authData.user.id,
-                        email: user.email,
-                        phone: user.phone,
-                        first_name: user.first_name,
-                        last_name: user.last_name,
-                        user_role: user.user_role,
-                        supervisor_id: user.supervisor_id ?? null,
-                        start_date: user.start_date ?? null,
-						next_review_date: nextReviewDate ?? null,
-                        is_active: user.is_active ?? true,
-                    })
-                    .select()
-                    .single();
+                } = await supabase.rpc("create_employee_profile", {
+                    p_user_id: authData.user.id,
+                    p_email: user.email,
+                    p_phone: user.phone,
+                    p_first_name: user.first_name,
+                    p_last_name: user.last_name,
+                    p_user_role: user.user_role,
+                    p_supervisor_id: user.supervisor_id ?? null,
+                    p_start_date: user.start_date ?? null,
+                    p_next_review_date: nextReviewDate.toISOString(),
+                    p_is_active: user.is_active ?? true,
+                });
 
-                // Roll back Auth account if profile creation fails
                 if (profileError) {
-
+                    // Roll back Auth account
                     await supabaseAdmin.auth.admin.deleteUser(
                         authData.user.id
                     );
@@ -250,7 +246,6 @@ Deno.serve(async (req) => {
             // ==============================================
 
             case "update": {
-                console.log(body);
                 if (!body.user?.user_id) {
                     throw new Error(
                         "user_id is required."
@@ -285,22 +280,18 @@ Deno.serve(async (req) => {
                 const {
                     data: profile,
                     error: profileError,
-                } =
-                    await supabaseAdmin
-                        .from("users")
-                        .update({
-                            email: user.email,
-                            first_name: user.first_name,
-                            last_name: user.last_name,
-                            user_role: user.user_role,
-                            supervisor_id: user.supervisor_id ?? null,
-                            start_date: user.start_date ?? null,
-							next_review_date: nextReviewDate ?? null,
-                            is_active: user.is_active ?? true,
-                        })
-                        .eq("user_id", user.user_id)
-                        .select()
-                        .single();
+                } = await supabase.rpc("update_employee_profile", {
+                    p_user_id: user.user_id,
+                    p_email: user.email,
+                    p_phone: user.phone,
+                    p_first_name: user.first_name,
+                    p_last_name: user.last_name,
+                    p_user_role: user.user_role,
+                    p_supervisor_id: user.supervisor_id ?? null,
+                    p_start_date: user.start_date ?? null,
+                    p_next_review_date: nextReviewDate.toISOString(),
+                    p_is_active: user.is_active ?? true,
+                });
 
                 if (profileError) {
                     throw profileError;
@@ -323,42 +314,61 @@ Deno.serve(async (req) => {
             }
 
             // // ==============================================
-            // // DELETE
+            // // DISABLE / ENABLE
             // // ==============================================
 
-            // case "delete": {
+            case "disable": {
+                if (!body.user?.user_id) {
+                    throw new Error(
+                        "user_id is required."
+                    );
+                }
 
-            //     if (!body.user_id) {
-            //         throw new Error(
-            //             "user_id is required."
-            //         );
-            //     }
+                const user = body.user;
 
-            //     const {
-            //         error: deleteError,
-            //     } =
-            //         await supabaseAdmin.auth.admin.deleteUser(
-            //             body.user_id
-            //         );
+                // Update Auth record
+                const {
+                    error: authUpdateError,
+                } =
+                    await supabaseAdmin.auth.admin.updateUserById(
+                        user.user_id,
+                        {
+                            ban_duration: user.is_active ? 'none' : '876000h'
+                        }
+                    );
 
-            //     if (deleteError) {
-            //         throw deleteError;
-            //     }
+                if (authUpdateError) {
+                    throw authUpdateError;
+                }
 
-            //     return new Response(
-            //         JSON.stringify({
-            //             success: true,
-            //         }),
-            //         {
-            //             status: 200,
-            //             headers: {
-            //                 ...corsHeaders,
-            //                 "Content-Type":
-            //                     "application/json",
-            //             },
-            //         }
-            //     );
-            // }
+                // Update application profile
+                const {
+                    data: profile,
+                    error: profileError,
+                } = await supabase.rpc("disable_employee", {
+                    p_user_id: user.user_id,
+                    p_is_active: user.is_active ?? true,
+                });
+
+                if (profileError) {
+                    throw profileError;
+                }
+
+                return new Response(
+                    JSON.stringify({
+                        success: true,
+                        user: profile,
+                    }),
+                    {
+                        status: 200,
+                        headers: {
+                            ...corsHeaders,
+                            "Content-Type":
+                                "application/json",
+                        },
+                    }
+                );
+            }
 
             default:
                 throw new Error(
@@ -367,8 +377,7 @@ Deno.serve(async (req) => {
         }
 
     } catch (error) {
-
-        console.error(error);
+        console.error("admin-users error:", error);
 
         return new Response(
             JSON.stringify({
@@ -376,14 +385,15 @@ Deno.serve(async (req) => {
                 error:
                     error instanceof Error
                         ? error.message
-                        : "Unknown error",
+                        : typeof error === "object"
+                            ? error
+                            : String(error),
             }),
             {
                 status: 400,
                 headers: {
                     ...corsHeaders,
-                    "Content-Type":
-                        "application/json",
+                    "Content-Type": "application/json",
                 },
             }
         );

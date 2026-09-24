@@ -79,7 +79,7 @@ export default function generateReviewPdf({user, reviews, categoriesData}: Gener
     let employeeInfoBody = [
         ["Name", employeeName],
         ["Email", user.email ?? "N/A"],
-        ["Phone", user.phone ?? "N/A"],      
+        ["Phone", user.phone ? `(${user.phone.slice(0,3)}) ${user.phone.slice(3,6)}-${user.phone.slice(6)}` : "N/A"],      
         ["Role", capitalizeString(user.user_role) ?? "N/A"],
         ["Start Date", formatDate(user.start_date)],
         ["Employment Duration", `${daysSinceDate(user.start_date)} days`]
@@ -103,15 +103,6 @@ export default function generateReviewPdf({user, reviews, categoriesData}: Gener
     });
 
     currentY = (doc as any).lastAutoTable.finalY + 10;    
-    
-    // let reviewScoresBody = [
-    //     ["Name", employeeName],
-    //     ["Email", user.email ?? "N/A"],
-    //     ["Phone", user.phone ?? "N/A"],      
-    //     ["Role", capitalizeString(user.user_role) ?? "N/A"],
-    //     ["Start Date", formatDate(user.start_date)],
-    //     ["Employment Duration", `${daysSinceDate(user.start_date)} days`]
-    // ]
 
     doc.setFontSize(14);
     doc.text("Reviews", margin, currentY);
