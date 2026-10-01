@@ -9,7 +9,7 @@ import type { AccordionEventKey } from "react-bootstrap/esm/AccordionContext";
 export default function AuditLogs() {
     const [activeAccordion, setActiveAccordion] = useState<AccordionEventKey | null>(null);
 
-    const {auditLogs, loading, error} = useSelectAuditLogs();
+    const {auditLogs, loading} = useSelectAuditLogs();
 
     const renderAuditLogDetails = (log: AuditLog): ReactNode => {
         switch(log.action_type) {

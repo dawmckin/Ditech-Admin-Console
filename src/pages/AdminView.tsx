@@ -1,7 +1,8 @@
 import { useState } from "react";
 
 import DashboardLayout from "../components/layout/DashboardLayout";
-import ImpersonationCard, {type ImpersonationForm} from "../components/admin/ImpersonationCard";
+import {type ImpersonationForm} from "../components/admin/ImpersonationCard";
+// import ImpersonationCard from "../components/admin/ImpersonationCard";
 import AdminTabs from "../components/admin/AdminTabs";
 import SupervisorTabs from "../components/supervisor/SupervisorTabs";
 import useAuth from "../hooks/useAuth";
@@ -16,6 +17,7 @@ export default function AdminView() {
     const {user: authUser} = useAuth();
 
     const renderView = () => {
+        setSelectedUser(null);
         if(selectedUser) {
             if(selectedUser?.user_role === 'admin' || selectedUser?.user_id === '') {
                 return <AdminTabs />

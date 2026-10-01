@@ -164,7 +164,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
 
         try {
             const reviewResponse = await submitReview(reviewForm);
-            // console.log('Review Submitted', reviewResponse);
+            console.log('Review Submitted', reviewResponse);
 
             try {
                 const selectedUser = usersData.filter(user => user.user_id === reviewForm.employee_id)[0];

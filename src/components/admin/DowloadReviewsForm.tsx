@@ -5,7 +5,6 @@ import generateReviewPdf from "../../utils/generate-reviews-pdf";
 import type { ReviewCategory } from "../../types/Review";
 import type { User } from "../../types/User";
 import { useToast } from "../../context/ToastContext";
-import Badge from "../common/Badge";
 
 interface DownloadReviewsProps {
     frontlineEmployees: User[];
