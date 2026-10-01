@@ -76,16 +76,18 @@ export default function generateReviewPdf({user, reviews, categoriesData}: Gener
     doc.text("Employee Information", margin, currentY);
     currentY += 5;
 
-    let infoBody = [
+    let employeeInfoBody = [
         ["Name", employeeName],
         ["Email", user.email ?? "N/A"],
-        ["Phone", user.phone ?? "N/A"],      
+        ["Phone", user.phone ? `(${user.phone.slice(0,3)}) ${user.phone.slice(3,6)}-${user.phone.slice(6)}` : "N/A"],      
         ["Role", capitalizeString(user.user_role) ?? "N/A"],
         ["Start Date", formatDate(user.start_date)],
-        ["Employment Duration", `${daysSinceDate(user.start_date)} days`]
+        ["Tenure", `${user.is_active ? daysSinceDate(user.start_date): daysSinceDate(user.start_date, user.end_date)} days`]
     ]
 
-    if(user.end_date) infoBody.splice(5, 0, ["End Date", formatDate(user.end_date)])
+    if(user.end_date && !user.is_active) {
+        employeeInfoBody.splice(5, 0, ["End Date", formatDate(user.end_date)]);
+    }
 
     autoTable(doc, {
         startY: currentY,
@@ -93,7 +95,30 @@ export default function generateReviewPdf({user, reviews, categoriesData}: Gener
         styles: {
             fontSize: 10,
         },
-        body: infoBody,
+        body: employeeInfoBody,
+        columnStyles: {
+            0: {
+                fontStyle: "bold",
+                cellWidth: 40,
+            },
+        },
+    });
+
+    currentY = (doc as any).lastAutoTable.finalY + 10;    
+
+    doc.setFontSize(14);
+    doc.text("Reviews", margin, currentY);
+    currentY += 5;
+
+    let reviewScoresBody = reviews.map(review => [`${review.milestone} Day`, `${review.total_score} / 75`, capitalizeString(review.review_status.replaceAll('_', ' '))]);
+
+    autoTable(doc, {
+        startY: currentY,
+            theme: "grid",
+        styles: {
+            fontSize: 10,
+        },
+        body: reviewScoresBody,
         columnStyles: {
             0: {
                 fontStyle: "bold",

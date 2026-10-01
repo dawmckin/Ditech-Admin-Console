@@ -19,6 +19,7 @@ export interface User {
     end_date?: string;
     last_review_date: string;
     next_review_date: string;
+    first_login_at?: string;
     created_at: string;
     reviews: Review[];
 }

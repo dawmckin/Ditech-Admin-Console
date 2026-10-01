@@ -4,9 +4,11 @@ interface ReviewProgressCircleProps {
     lastReviewDate: string;
     reviewIntervalDays: number;
     size?: number;
+    allMilestonesCompleted?: boolean;
+    isActive?: boolean;
 }
 
-export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays, size = 50}: ReviewProgressCircleProps) {
+export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays, size = 50, allMilestonesCompleted = false, isActive = true}: ReviewProgressCircleProps) {
     const today = new Date();
     const lastReview = new Date(lastReviewDate);
 
@@ -28,20 +30,34 @@ export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays
     const strokeOffset = circumference * (1 - progress);
 
     const renderProgress = () => {
+        if(!isActive) {
+            return (
+                <div className="mx-2">
+                    <Badge type='user_disabled' text='User Disabled' />                
+                </div>  
+            );
+        } else if(allMilestonesCompleted) {
+            return (
+                <div className="mx-2">
+                    <Badge type='secondary' text='All Milestones Reached' />                
+                </div>  
+            );
+        }
         if(daysOverdue > 0) {
-            if(daysOverdue > 5) {
                 return (
                     <div className="mx-2">
                         <Badge type="overdue" text={`${daysOverdue} ${(daysOverdue === 1) ? 'Day': 'Days'} Overdue`} />
                     </div>  
                 );
-            } else {
-                return (
-                    <div className="mx-2">
-                        <Badge type="overdue" text={`${daysOverdue} ${(daysOverdue === 1) ? 'Day': 'Days'} Overdue`} />
-                    </div>  
-                );
-            }
+            // if(daysOverdue > 5) {
+
+            // } else {
+            //     return (
+            //         <div className="mx-2">
+            //             <Badge type="overdue" text={`${daysOverdue} ${(daysOverdue === 1) ? 'Day': 'Days'} Overdue`} />
+            //         </div>  
+            //     );
+            // }
         } else if(daysRemaining === 0) {
             return (
                 <div className="mx-2">

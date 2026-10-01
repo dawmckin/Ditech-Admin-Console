@@ -14,7 +14,7 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
     const {user: authUser} = useAuth();
 
     return (
-        <div className="min-vh-100 bg-light">
+        <div className="d-flex flex-column justify-content-between min-vh-100 bg-light">
             <Header userRole={authUser?.user_role ?? 'frontline'} />
 
             <PageContainer>

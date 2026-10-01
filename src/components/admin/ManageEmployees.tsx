@@ -28,8 +28,7 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
 
     const {showToast} = useToast();
     const {usersData, loading: loadingUsers, reload: reloadUsers} = useSelectUsers('all');
-    // const {usersData: downloadReviews, loading: loadingDownload} = useSelectUsers('single', selectedDownloadUser);
-    const {create, update, loading: loadingManageEmployees} = useManageEmployees();
+    const {create, update, disable, loading: loadingManageEmployees} = useManageEmployees();
 
     const handleCreateEmployee = async (employeeData: CreateEmployeeData): Promise<void> => {
         try {
@@ -59,6 +58,20 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
         }
     }
 
+    const handleDisableEmployee = async (employeeData: UpdateEmployeeData): Promise<void> => {
+        try {
+            const employee = await disable({...employeeData, is_active: !employeeData.is_active});
+                        
+            await reloadUsers();
+
+            showToast('User Disabled Successfully', [`${capitalizeString(employee.user_role.toLocaleUpperCase())} user disabled.`], 'success');
+            setActiveComponent('table');
+        } catch (err) {
+            const message = (err instanceof Error) ? err.message : 'Unable to disable user';
+            showToast('Error', [message], 'danger');
+        }
+    }
+
     // search
     const [searchTerm, setSearchTerm] = useState("");
     const filteredUsers = usersData.filter(user => {
@@ -76,7 +89,7 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
     });
 
     return (
-        <div className="p-4">
+        <div className={`d-flex flex-column p-4 manage-employees-${activeComponent}`}>
             <h4>Manage Employees</h4>
             <small className="text-muted">{`Perform administrative actions (add, edit, disable users)`}</small>
 
@@ -110,15 +123,14 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
                                     </Button>   
                                 </OverlayTrigger>
                                 <Button variant="primary" type="button" onClick={() => setActiveComponent('add')}>
-                                    <i className="bi bi-plus-circle"></i> Add User
+                                    <i className="bi bi-plus-circle"></i> Add
                                 </Button>
                             </Col>
                         </Row>
                     </div>
 
                     {
-                        (!loadingUsers) ? 
-                        (
+                        (!loadingUsers) && 
                             <div>   
                                 <ManageEmployeesTable 
                                     users={filteredUsers}
@@ -128,12 +140,6 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
                                     }}
                                 />
                             </div>
-                        ) : 
-                        (
-                            <div className="text-muted text-center my-auto">
-                                <p className="">Loading employees...</p>
-                            </div>
-                        )
                     }
                 </>
             }
@@ -159,9 +165,16 @@ export default function ManageEmployees({categories}: ManageEmployeesProps) {
                     user={selectedEditUser}
                     supervisors={usersData.filter(user => user.user_role === 'supervisor')}
                     loading={loadingManageEmployees}
+                    onDisable={(employee) => handleDisableEmployee(employee)}
                     onSubmit={(employee) => handleUpdateEmployee(employee)}
                     onCancel={() => setActiveComponent('table')}
                 />
+            }
+
+            {loadingUsers &&
+                <div className="text-muted text-center my-auto">
+                    <p className="">Loading employees...</p>
+                </div>
             }
 
         </div>

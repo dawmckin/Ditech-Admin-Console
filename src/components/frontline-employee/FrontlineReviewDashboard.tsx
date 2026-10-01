@@ -43,7 +43,7 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
         }
     }
 
-    const milestoneConfig = [15, 30, 45, 60];
+    const milestoneConfig = ['15', '30', '45', '60'];
 
     const frontlineId = frontline?.user_id ?? authUser?.user_id;
 
@@ -53,8 +53,6 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
     const [activeReviewDetails, setActiveReviewDetails] = useState<AccordionEventKey | null>(null);
 
     const {usersData, loading} = useSelectUsers('single', frontlineId);
-
-    console.log(usersData);
 
     useEffect(() => {
         setActiveReviewDetails(null);
@@ -66,47 +64,30 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
             <div className="d-flex flex-column gap-2">
                 <div className="frontline-dashboard-header">
                     <Row>
-                        {/* {
-                            loading && <p>asdfasdfasdfasdfasdfasd</p>
-                        } */}
+
                         <Col md={4}>
                             <div className="d-flex text-center">
-
-                            {
-                                loading ? 
-                                (
-                                    milestoneConfig.slice(reviews?.length, 4)?.map(milestone => (
-                                        <div>
-                                            <ReviewScoreProgressCircle totalScore={0} reviewStatus='incomplete' />
-                                            <small className="text-muted">{milestone} Days</small>
-                                        </div>
-                                    ))                                    
-                                ) : 
-                                (
-                                    <>
-                                    {
-                                        reviews?.map(review => (
+                                {
+                                    loading ? 
+                                    (
+                                        milestoneConfig.map(milestone => (
                                             <div>
-                                                <ReviewScoreProgressCircle totalScore={review.total_score} reviewStatus={review.review_status as ReviewStatusType} />
-                                                <small className="text-muted">{review.milestone} Days</small>
+                                                <ReviewScoreProgressCircle totalScore={0} reviewStatus='incomplete' />
+                                                <small className="text-muted">{milestone} Days</small>
+                                            </div>
+                                        ))                                    
+                                    ) : 
+                                    (
+                                        milestoneConfig.map(milestone => (
+                                            <div>
+                                                <ReviewScoreProgressCircle 
+                                                    totalScore={reviews?.find(review => review.milestone === milestone)?.total_score ?? 0} 
+                                                    reviewStatus={reviews?.find(review => review.milestone === milestone)?.review_status as ReviewStatusType ?? 'incomplete'} />
+                                                <small className="text-muted">{milestone} Days</small>
                                             </div>
                                         ))
-                                    }
-                                    {
-                                        (reviews?.length < 4) && 
-                                        (
-                                            milestoneConfig.slice(reviews?.length, 4)?.map(milestone => (
-                                                <div>
-                                                    <ReviewScoreProgressCircle totalScore={0} reviewStatus='incomplete' />
-                                                    <small className="text-muted">{milestone} Days</small>
-                                                </div>
-                                            ))
-                                        )
-                                    }
-                                    </>
-                                )
-                            }
-
+                                    )
+                                }
                             </div>
                         </Col>
                         {
@@ -133,7 +114,7 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
                     !loading ? 
                     (
                         <div className="review-dashboard-container d-flex flex-column gap-2">
-                            <Accordion className="review-details-accordion p-0"
+                            <Accordion className="details-accordion p-0"
                                 defaultActiveKey="0"
                             >
                             {(
@@ -145,7 +126,7 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
                                                     <div className="mx-2 flex-shrink-0">
                                                         <Badge
                                                             type="milestone"
-                                                            text={`${review.milestone} Day Review`}
+                                                            text={`${review.milestone} Day`}
                                                             size="lg"
                                                         />
                                                     </div>
@@ -176,7 +157,7 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
                                                 </Col>                                    
                                                 <Col md={11}>
                                                     <Accordion 
-                                                        className="review-details-accordion" 
+                                                        className="details-accordion" 
                                                         activeKey={activeReviewDetails}
                                                         onSelect={(eventKey) => {
                                                             setActiveReviewDetails(eventKey);
@@ -235,7 +216,7 @@ export default function FrontlineReviewDashboard({authUser, frontline = null}: F
                     ) : 
                     (
                         <div className="text-muted text-center my-auto">
-                            <p className="">Loading...</p>
+                            <p className="">Loading reviews...</p>
                         </div>
                     )
                 }

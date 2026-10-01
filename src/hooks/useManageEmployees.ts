@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 
 import { 
     createEmployee,
+    disableEmployee,
     updateEmployee,
     type CreateEmployeeData,
     type UpdateEmployeeData
@@ -35,7 +36,7 @@ export function useManageEmployees() {
         try {
             return await updateEmployee(employee);
         } catch (err) {
-            const error = err instanceof Error ? err : new Error('Unable to create employee');
+            const error = err instanceof Error ? err : new Error('Unable to update employee');
             setError(error);
             throw error;
         } finally {
@@ -43,5 +44,20 @@ export function useManageEmployees() {
         }
     }, []);
 
-    return {create, update, loading, error};
+    const disable = useCallback(async (employee: UpdateEmployeeData): Promise<User> => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            return await disableEmployee(employee);
+        } catch (err) {
+            const error = err instanceof Error ? err : new Error('Unable to disable employee');
+            setError(error);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    return {create, update, disable, loading, error};
 }

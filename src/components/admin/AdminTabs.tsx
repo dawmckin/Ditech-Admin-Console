@@ -13,12 +13,12 @@ import ManageEmployees from "./ManageEmployees";
 type AdminTab = "chat" | "manageEmployees" | "employeeReviews" | "auditLogs";
 
 export default function AdminTabs() {
-    const [activeTab, setActiveTab] = useState<AdminTab>('chat');
+    const [activeTab, setActiveTab] = useState<AdminTab>('manageEmployees');
 
     const {categories} = useReviewCategory();
 
     const tabs: Tab[] = [
-        {id: 'chat', label: 'Admin Console'},
+        // {id: 'chat', label: 'Admin Console'},
         {id: 'manageEmployees', label: 'Manage Employees'},
         {id: 'employeeReviews', label: 'Employee Reviews'},
         {id: 'auditLogs', label: 'Audit Logs'}

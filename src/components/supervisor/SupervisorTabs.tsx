@@ -25,7 +25,7 @@ export default function SupervisorTabs({authUser, supervisor = null}: Supervisor
 
     const tabs: Tab[] = [
         {id: 'reviewDashboard', label: 'Review Dashboard'},
-        {id: 'newReview', label: 'Submit New Review'}
+        // {id: 'newReview', label: 'Submit New Review'}
     ]
 
     const renderTabContent = () => {

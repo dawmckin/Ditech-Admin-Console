@@ -3,10 +3,12 @@ import { Badge as BootstrapBadge } from "react-bootstrap";
 import './Badge.css';
 
 export type BadgeType = 
-    | 'review'
-    | 'approval' 
-    | 'comment'
-    | 'login'
+    | 'user_created'
+    | 'user_updated' 
+    | 'user_disabled'
+    | 'user_enabled'
+    | 'review_submitted'
+    | 'details_value'
     | 'milestone'
     | 'milestone_light'
     | 'overdue'
@@ -43,21 +45,29 @@ interface BadgeProps {
 
 export default function Badge({type, text, size = 'sm', className = ''}: BadgeProps) {
     const badgeConfig: Record<BadgeType, {icon: string, variant: BadgeVariant}> = {
-        review: {
-            icon: "file-earmark-text",
-            variant: "secondary",
-        },
-        approval: {
-            icon: "check-circle",
+        user_created: {
+            icon: "person-fill-add",
             variant: "success",
         },
-        comment: {
-            icon: "chat-left-text",
-            variant: "info",
+        user_updated: {
+            icon: "person-fill-exclamation",
+            variant: "warning",
         },
-        login: {
-            icon: "box-arrow-in-right",
+        user_disabled: {
+            icon: "person-fill-slash",
+            variant: "danger",
+        },
+        user_enabled: {
+            icon: "person-fill-check",
+            variant: "success",
+        },
+        review_submitted: {
+            icon: "file-earmark-text-fill",
             variant: "primary",
+        },        
+        details_value: {
+            icon: "",
+            variant: "light",
         },
         milestone: {
             icon: 'award-fill',
@@ -136,7 +146,6 @@ export default function Badge({type, text, size = 'sm', className = ''}: BadgePr
     return (
         <BootstrapBadge
             bg={badge.variant}
-            // pill={false}
             className={`app-badge ${badge.variant === 'light' ? 'text-dark' : ''} ${className}`} 
             style={badgeStyles[size]}
         >
