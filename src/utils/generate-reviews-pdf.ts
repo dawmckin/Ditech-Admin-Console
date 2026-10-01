@@ -82,10 +82,12 @@ export default function generateReviewPdf({user, reviews, categoriesData}: Gener
         ["Phone", user.phone ? `(${user.phone.slice(0,3)}) ${user.phone.slice(3,6)}-${user.phone.slice(6)}` : "N/A"],      
         ["Role", capitalizeString(user.user_role) ?? "N/A"],
         ["Start Date", formatDate(user.start_date)],
-        ["Employment Duration", `${daysSinceDate(user.start_date)} days`]
+        ["Tenure", `${user.is_active ? daysSinceDate(user.start_date): daysSinceDate(user.start_date, user.end_date)} days`]
     ]
 
-    if(user.end_date) employeeInfoBody.splice(5, 0, ["End Date", formatDate(user.end_date)])
+    if(user.end_date && !user.is_active) {
+        employeeInfoBody.splice(5, 0, ["End Date", formatDate(user.end_date)]);
+    }
 
     autoTable(doc, {
         startY: currentY,

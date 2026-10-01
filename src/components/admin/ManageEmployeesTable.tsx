@@ -65,7 +65,7 @@ export default function ManageEmployeesTable({users, onEdit}: ManageEmployeesTab
                                                 text={
                                                     (daysSinceDate(user?.start_date) < 0) ? 
                                                         `Not Started` :
-                                                        `Day ${daysSinceDate(user?.start_date)}`
+                                                        `Day ${daysSinceDate(user?.start_date, user?.end_date)}`
                                                 }
                                                 size="md"
                                                 className="d-flex justify-content-center"

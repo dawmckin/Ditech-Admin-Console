@@ -164,7 +164,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
 
         try {
             const reviewResponse = await submitReview(reviewForm);
-            console.log('Review Submitted', reviewResponse);
+            // console.log('Review Submitted', reviewResponse);
 
             try {
                 const selectedUser = usersData.filter(user => user.user_id === reviewForm.employee_id)[0];
@@ -179,7 +179,7 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                     last_review_date: lastReviewDate.toISOString(),
                     next_review_date: nextReviewDate.toISOString()
                 };
-                console.log(updatedUser);
+                // console.log(updatedUser);
                 const userResponse = await updateUserAfterReview(updatedUser);
                 console.log('User Updated After Review', userResponse);
 

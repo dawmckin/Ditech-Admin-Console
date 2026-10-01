@@ -5,9 +5,10 @@ interface ReviewProgressCircleProps {
     reviewIntervalDays: number;
     size?: number;
     allMilestonesCompleted?: boolean;
+    isActive?: boolean;
 }
 
-export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays, size = 50, allMilestonesCompleted}: ReviewProgressCircleProps) {
+export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays, size = 50, allMilestonesCompleted = false, isActive = true}: ReviewProgressCircleProps) {
     const today = new Date();
     const lastReview = new Date(lastReviewDate);
 
@@ -29,6 +30,19 @@ export default function ReviewProgressCircle({lastReviewDate, reviewIntervalDays
     const strokeOffset = circumference * (1 - progress);
 
     const renderProgress = () => {
+        if(!isActive) {
+            return (
+                <div className="mx-2">
+                    <Badge type='user_disabled' text='User Disabled' />                
+                </div>  
+            );
+        } else if(allMilestonesCompleted) {
+            return (
+                <div className="mx-2">
+                    <Badge type='secondary' text='All Milestones Reached' />                
+                </div>  
+            );
+        }
         if(daysOverdue > 0) {
                 return (
                     <div className="mx-2">

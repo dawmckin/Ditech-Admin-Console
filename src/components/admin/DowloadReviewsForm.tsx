@@ -5,6 +5,7 @@ import generateReviewPdf from "../../utils/generate-reviews-pdf";
 import type { ReviewCategory } from "../../types/Review";
 import type { User } from "../../types/User";
 import { useToast } from "../../context/ToastContext";
+import Badge from "../common/Badge";
 
 interface DownloadReviewsProps {
     frontlineEmployees: User[];
@@ -155,6 +156,7 @@ export default function DownloadReviews({frontlineEmployees, categories, onCance
                                     <option
                                         key={user.user_id}
                                         value={user.user_id}
+                                        className={!user.is_active ? 'bg-danger-subtle' : ''}
                                     >
                                         {user.first_name} {user.last_name}
                                     </option>

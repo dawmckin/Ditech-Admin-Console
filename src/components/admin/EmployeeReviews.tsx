@@ -135,14 +135,16 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
                                                         <Col xs="auto" className="px-3" style={{ width: "100px" }}>
                                                             <Badge
                                                                 type={
-                                                                    daysSinceDate(user?.start_date) < 0
+                                                                    (daysSinceDate(user?.start_date) < 0 || !user.is_active)
                                                                         ? "secondary"
                                                                         : "primary"
                                                                 }
                                                                 text={
                                                                     daysSinceDate(user?.start_date) < 0
                                                                         ? "Not Started"
-                                                                        : `Day ${daysSinceDate(user?.start_date)}`
+                                                                        : (user?.is_active)
+                                                                            ? `Day ${daysSinceDate(user?.start_date, user?.end_date)}`
+                                                                            : 'N/A'
                                                                 }
                                                                 className="d-flex justify-content-center"
                                                             />
@@ -155,25 +157,14 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
                                                         </Col>
 
                                                         <Col xs="auto" className="">
-                                                            {
-                                                                (Number.parseInt(user.current_milestone) === 75) ? 
-                                                                (
-                                                                    <Badge
-                                                                        type='secondary'
-                                                                        text='All Milestones Reached'
-                                                                        className="d-flex justify-content-center"
-                                                                    />
-                                                                ) : 
-                                                                (
-                                                                    <ReviewProgressCircle
-                                                                        lastReviewDate={
-                                                                            user.last_review_date ?? user.start_date
-                                                                        }
-                                                                        reviewIntervalDays={15}
-                                                                    />
-                                                                )
-                                                            }
-
+                                                            <ReviewProgressCircle
+                                                                lastReviewDate={
+                                                                    user.last_review_date ?? user.start_date
+                                                                }
+                                                                reviewIntervalDays={15}
+                                                                allMilestonesCompleted={user.current_milestone === '75'}
+                                                                isActive={user.is_active}
+                                                            />
                                                         </Col>
                                                     </Row>
                                                 </Accordion.Header>

@@ -5,7 +5,6 @@ interface PageContainerProps {
 }
 
 export default function PageContainer({ children }: PageContainerProps) {
-	console.log(children);
 	return (
 		<main className="page-container mx-auto py-4">
 			{children}

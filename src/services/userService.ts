@@ -138,9 +138,10 @@ export async function getPendingReviewUsers(): Promise<User[]> {
         .from('users')
         .select(usersReviewsQuery)
         .eq('user_role', 'frontline')
+        .eq('is_active', true)
         .neq('current_milestone', '75')
         .lte('start_date', reviewRangeDate.toISOString())
-        .order('is_active', {ascending: false})
+        // .order('is_active', {ascending: false})
         .order('next_review_date');
 
     if(error) {

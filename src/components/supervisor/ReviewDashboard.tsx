@@ -113,7 +113,7 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                                                                 className="border text-white"
                                                                 variant={(daysSinceDate(user.next_review_date) > 5) ? 'secondary' : 'primary'}
                                                                 onClick={() => onNewReview('newReview', user)}
-                                                                disabled={daysSinceDate(user.next_review_date) > 5}
+                                                                disabled={daysSinceDate(user.next_review_date) > 45}
                                                             >
                                                                 New Review
                                                             </Button>
