@@ -10,10 +10,11 @@ export interface ImpersonationForm {
 }
 
 interface ImpersonationCardProps {
-    onUserSelection: (impersonationFormData: ImpersonationForm) => void
+    onUserSelection: (impersonationFormData: ImpersonationForm) => void;
+    hide?: boolean;
 }
 
-export default function ImpersonationCard({onUserSelection}: ImpersonationCardProps) {
+export default function ImpersonationCard({onUserSelection, hide = false}: ImpersonationCardProps) {
     const [impersonationForm, setImpersonationForm] = useState<ImpersonationForm>(
         {
             user_role: 'admin',
@@ -55,7 +56,7 @@ export default function ImpersonationCard({onUserSelection}: ImpersonationCardPr
     };
     
     return (
-        <Accordion className="mb-4">
+        <Accordion className="mb-4" style={hide ? {display: 'none'} : {}}>
             <Accordion.Item eventKey="0">
                 <Accordion.Header onClick={() => setIsOpen(prev => !prev)}>
                     <div className="d-flex justify-content-between align-items-center w-100">
