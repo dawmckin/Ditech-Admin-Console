@@ -33,10 +33,11 @@ interface NewReviewProps {
     supervisor?: ImpersonationForm | null;
     categories: ReviewCategory[];
     selectedUser?: User | null;
+    onCancel: () => void;
     onSumbit: () => void;
 }
 
-export default function NewReview({authUser, supervisor = null, categories: categoriesData, selectedUser, onSumbit}: NewReviewProps) {
+export default function NewReview({authUser, supervisor = null, categories: categoriesData, selectedUser, onCancel, onSumbit}: NewReviewProps) {
     const supervisorId = supervisor?.user_id ?? authUser?.user_id;
 
     const getInitialReviewForm = (reviewSubmit: boolean = false): EmployeeReviewForm => ({
@@ -213,8 +214,19 @@ export default function NewReview({authUser, supervisor = null, categories: cate
 
     return (
         <div className="p-4">
-            <h4>Team Member 9 Box Review</h4>
-            <small className="text-muted">This assessment evaluates team member performance across 9 key areas.</small>
+                <div className="d-flex justify-content-between">
+                    <h4>Team Member 9 Box Review</h4>
+                    <Button 
+                        className="border"
+                        variant="danger"
+                        onClick={onCancel}
+                    >
+                        Cancel
+                    </Button>
+                </div>
+
+
+                <small className="text-muted">This assessment evaluates team member performance across 9 key areas.</small>
             
             <hr />
             

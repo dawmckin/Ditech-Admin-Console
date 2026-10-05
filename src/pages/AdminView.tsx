@@ -35,7 +35,7 @@ export default function AdminView() {
 
     return (
         <DashboardLayout>
-            <ImpersonationCard onUserSelection={setSelectedUser} hide={true}/>
+            <ImpersonationCard onUserSelection={setSelectedUser} hide={false}/>
 
             {renderView()}
 
