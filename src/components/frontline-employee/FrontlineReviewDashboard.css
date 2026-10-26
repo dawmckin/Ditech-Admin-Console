@@ -1,0 +1,118 @@
+.frontline-milestones {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.frontline-milestone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.frontline-current-day {
+    text-align: end;
+    margin-bottom: 0;
+}
+
+.frontline-current-day-mobile {
+    display: none;
+}
+
+.frontline-review-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+}
+
+.frontline-review-milestone {
+    display: flex;
+    align-items: center;
+}
+
+.frontline-review-score {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    margin-right: 0.8rem;
+}
+
+.total-score {
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.review-score-column {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    .review-progress-bar {
+        display: none;
+    }
+}
+
+.review-dashboard-container {
+    overflow-x: hidden;
+}
+
+@media (max-width: 767.98px) {
+    .frontline-milestones {
+        width: 100%;
+    }
+
+    .frontline-current-day {
+        display: none;
+    }
+
+    .frontline-current-day-mobile {
+        display: block;
+    }
+
+    .review-score-column {
+        margin-bottom: 1rem;
+
+        .review-progress-bar {
+            display: block;
+        }
+
+        .review-progress-circle {
+            display: none;
+        }
+    }
+
+    .review-dashboard-container {
+        width: 100%;
+    }
+
+    .review-dashboard-container .accordion-body {
+        padding: 0.75rem;
+    }
+
+    .review-details-metadata {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .frontline-review-header {
+        grid-template-columns: 1fr auto;
+        gap: 0.5rem;
+    }
+
+    .frontline-review-score {
+        font-size: 0.8rem;
+    }
+
+    .frontline-review-score .badge {
+        font-size: 0.7rem;
+    }
+
+    p.total-score {
+        font-size: 0.85rem;
+    }
+}

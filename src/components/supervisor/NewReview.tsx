@@ -374,7 +374,14 @@ export default function NewReview({authUser, supervisor = null, categories: cate
                                     </p>
                                 </Col>
                                 <Col md={4} className="d-flex justify-content-end">
-                                    <Button variant="primary" className="fw-semibold" onClick={handleSubmit}>Submit Review</Button>
+                                    <Button 
+                                        variant="primary" 
+                                        className="fw-semibold" 
+                                        disabled={submitTriggered}
+                                        onClick={handleSubmit}
+                                    >
+                                        {submitTriggered ? 'Submitting...' : 'Submit Review'}
+                                    </Button>
                                 </Col>
                             </Row>
                         </Card.Body>

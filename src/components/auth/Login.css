@@ -1,0 +1,92 @@
+.login-page {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 480px;
+}
+
+.login-card-body {
+    padding: 2rem;
+}
+
+.login-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.login-logo {
+    width: 40px;
+    height: 50px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.login-title {
+    font-size: 1.75rem;
+    line-height: 1.2;
+}
+
+.login-welcome {
+    margin: 2rem 0;
+}
+
+.login-input {
+    min-height: 44px;
+}
+
+.login-button {
+    min-height: 44px;
+}
+
+@media (max-width: 575.98px) {
+
+    .login-page {
+        padding: 12px;
+        align-items: center;
+    }
+
+    .login-card {
+        max-width: 100%;
+    }
+
+    .login-card-body {
+        padding: 1.25rem;
+    }
+
+    .login-brand {
+        gap: 0.75rem;
+    }
+
+    .login-logo {
+        width: 32px;
+        height: 42px;
+    }
+
+    .login-title {
+        font-size: 1.35rem;
+    }
+
+    .login-welcome {
+        margin: 1.5rem 0;
+    }
+
+    .login-welcome h3 {
+        font-size: 1.4rem;
+    }
+
+    .login-input {
+        min-height: 46px;
+    }
+
+    .login-button {
+        min-height: 46px;
+    }
+}

@@ -53,7 +53,7 @@ export default function PreviousReviewDetails({user, prompts, categories, review
         <div>
             {
                 (milestone && reviewer) &&    
-                <div className="d-flex justify-content-between mb-2" style={{fontSize: '.8em'}}>
+                <div className="d-flex justify-content-between mb-2 review-details-metadata" style={{fontSize: '.8em'}}>
                     <small><span className="fw-semibold">Milestone Achieved On: </span> {getMilestoneDate(milestone, user.start_date)}</small>
                     <small><span className="fw-semibold">Reviewer: </span>{reviewer}</small>
                 </div>

@@ -19,6 +19,8 @@ export type BadgeType =
     | 'needs_improving'
     | 'does_not_comply'
     | 'ready_for_review'
+    | 'under_five_days'
+    | 'total_employees'
     | 'primary'
     | 'secondary'
     | 'dark'
@@ -84,6 +86,14 @@ export default function Badge({type, text, size = 'sm', className = ''}: BadgePr
         overdue: {
             icon: 'clock-history',
             variant: 'danger'
+        },
+        under_five_days: {
+            icon: 'hourglass-split',
+            variant: 'primary'
+        },
+        total_employees: {
+            icon: 'person-fill',
+            variant: 'secondary'
         },
         category_score: {
             icon: '',

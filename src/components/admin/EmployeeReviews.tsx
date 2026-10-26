@@ -17,6 +17,7 @@ type ReviewsFilterType =
     | 'readyForReview' 
     | 'pastReviewPeriod'
     | 'milestonesCompleted'
+    | 'disabledUsers'
 
 interface EmployeeReviewsProps {
     categories: ReviewCategory[];
@@ -34,8 +35,7 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
         const search = searchTerm.toLowerCase().trim();
 
         // Search filter
-        const matchesSearch =
-            !search ||
+        const matchesSearch = !search ||
             user.first_name?.toLowerCase().includes(search) ||
             user.last_name?.toLowerCase().includes(search);
 
@@ -44,30 +44,36 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
         switch (filter) {
             case "pendingMilestone":
                 // Employee is some days away from review period
-                matchesFilter =
-                    matchesFilter = user.current_milestone !== '75' &&
-                    daysSinceDate(user.next_review_date) < 0;
+                matchesFilter = user.is_active &&
+                        user.current_milestone !== '75' &&
+                        daysSinceDate(user.next_review_date) < 0;
                 break;
 
             case "readyForReview":
                 // Employee has reached review period
-                matchesFilter =
-                    matchesFilter = user.current_milestone !== '75' &&
+                matchesFilter = user.is_active &&
+                    user.current_milestone !== '75' &&
                     daysSinceDate(user.next_review_date) >= 0 &&
                     daysSinceDate(user.next_review_date) <= 5;
                 break;
 
             case "pastReviewPeriod":
                 // Employee is beyond the review period
-                matchesFilter =
-                    matchesFilter = user.current_milestone !== '75' &&
+                matchesFilter = user.is_active &&
+                    user.current_milestone !== '75' &&
                     daysSinceDate(user.next_review_date) > 5;
                 break;
             case "milestonesCompleted":
                 // Employee has completed all previous review periods
-                matchesFilter = user.current_milestone === '75';
+                matchesFilter = user.is_active &&
+                    user.current_milestone === '75';
+                break;
+            case "disabledUsers":
+                // Employee account is not active
+                matchesFilter = !user.is_active;
                 break;
             case "all":
+                // All employees
                 matchesFilter = true;
                 break;
             default:
@@ -99,6 +105,7 @@ export default function EmployeeReviews({categories}: EmployeeReviewsProps) {
                         >
                             <option value="" hidden>Select filter</option>
                             <option value="all" >All Employees</option>
+                            <option value="disabledUsers" >Disabled Users</option>
                             <option value="milestonesCompleted">Milestones Completed</option>
                             <option value="pastReviewPeriod">Past Review Period</option>
                             <option value="pendingMilestone">Pending Milestone</option>

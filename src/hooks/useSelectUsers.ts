@@ -16,7 +16,9 @@ type GetUsersType =
 
 export function useSelectUsers(
     type: GetUsersType,
+    supervisorId?: string | null,
     frontlineUser?: string
+
 ) {
     const [usersData, setUsersData] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
@@ -43,7 +45,7 @@ export function useSelectUsers(
                 }
 
                 case "pendingReview": {
-                    const data = await getPendingReviewUsers();
+                    const data = await getPendingReviewUsers(supervisorId ?? '');
 
                     setUsersData(data);
 
@@ -76,7 +78,7 @@ export function useSelectUsers(
         } finally {
             setLoading(false);
         }
-    }, [type, frontlineUser]);
+    }, [type, supervisorId, frontlineUser]);
 
     useEffect(() => {
         reload();
