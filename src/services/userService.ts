@@ -130,7 +130,7 @@ export async function getPastReviewUsers(): Promise<User[]> {
     return data;
 }
 
-export async function getPendingReviewUsers(): Promise<User[]> {
+export async function getPendingReviewUsers(supervisorId: string): Promise<User[]> {
     const reviewRangeDate = new Date;
     reviewRangeDate.setDate(reviewRangeDate.getDate() + 66);
 
@@ -138,6 +138,7 @@ export async function getPendingReviewUsers(): Promise<User[]> {
         .from('users')
         .select(usersReviewsQuery)
         .eq('user_role', 'frontline')
+        .eq('supervisor_id', supervisorId)
         .eq('is_active', true)
         .neq('current_milestone', '75')
         .lte('start_date', reviewRangeDate.toISOString())

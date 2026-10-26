@@ -1,11 +1,11 @@
-import { Accordion, Button, Col, Row, OverlayTrigger } from "react-bootstrap";
+import { Accordion, Button, Col, Row, OverlayTrigger, Placeholder } from "react-bootstrap";
 import Badge from "../common/Badge";
 
 import { useSelectUsers } from "../../hooks/useSelectUsers";
 import ReviewProgressCircle from "../common/ReviewProgressCircle";
 import PreviousReview from "./PreviousReview";
 import type { AccordionEventKey } from "react-bootstrap/esm/AccordionContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ImpersonationForm } from "../admin/ImpersonationCard";
 import type { User } from "../../types/User";
 // import { useNavigate } from "react-router-dom";
@@ -13,6 +13,13 @@ import type { SupervisorTab } from "./SupervisorTabs";
 import type { ReviewCategory } from "../../types/Review";
 import Popover from "../common/Popover";
 import daysSinceDate from "../../utils/days-since-date";
+
+interface ReviewStatusDataType {
+    total_employees: number;
+    overdue: number;
+    ready: number;
+    under_five_days: number;
+}
 
 interface ReviewDashboardProps {
     authUser: User;
@@ -24,12 +31,50 @@ interface ReviewDashboardProps {
 export default function ReviewDashboard({authUser, supervisor = null, categories, onNewReview}: ReviewDashboardProps) {
     const [activeUser, setActiveUser] = useState<AccordionEventKey | null>(null);
     const [icon, setIcon] = useState<string>('bi-exclamation-circle-fill');
+    const [reviewStatusData, setReviewStatusData] = useState<ReviewStatusDataType>({
+        total_employees: 0, 
+        overdue: 0, 
+        ready: 0, 
+        under_five_days: 0
+    });
 
     const supervisorId = supervisor?.user_id ?? authUser?.user_id;
     
-    const {usersData, loading} = useSelectUsers('pendingReview');
+    const {usersData, loading} = useSelectUsers('pendingReview', supervisorId);
 
-    const users = usersData.filter(user => user.supervisor_id === supervisorId);
+    // const users = usersData.filter(user => user.supervisor_id === supervisorId);
+
+    const elapsedDays = (lastReviewDate: string, reviewIntervalDays = 15) => {
+        const today = new Date();
+        const lastReview = new Date(lastReviewDate);
+
+        const elapsedMs = today.getTime() - lastReview.getTime();
+        const elapsedDays = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
+
+        const daysRemaining = Math.max(reviewIntervalDays - elapsedDays, 0);
+        const daysOverdue = elapsedDays - reviewIntervalDays;
+
+        return {daysRemaining, daysOverdue};
+    };
+
+    useEffect(() => {
+        const total_employees = usersData.length;
+        const overdue = usersData.filter(user => {
+            return elapsedDays(user.last_review_date).daysOverdue > 0;
+        }).length;
+        const ready = usersData.filter(user => {
+            const {daysOverdue, daysRemaining} = elapsedDays(user.last_review_date);
+            return daysRemaining === 0 && daysOverdue <= 0;
+        }).length;
+        const under_five_days = usersData.filter(user => {
+            const {daysRemaining} = elapsedDays(user.last_review_date);
+            return daysRemaining < 5 && daysRemaining > 0;
+        }).length;
+
+        // console.log(total_employees, overdue, ready, under_five_days);
+
+        setReviewStatusData({total_employees, overdue, ready, under_five_days});
+    }, [usersData]);
 
     const renderPendingReviews = () => {
         return (
@@ -39,7 +84,7 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                     (
                         <>
                             {
-                                users.map(user => (
+                                usersData.map(user => (
                                     <Accordion className="details-accordion p-0" 
                                         key={user.user_id}
                                         activeKey={activeUser}
@@ -131,7 +176,7 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
                                 ))
                             }
                             {
-                                (users?.length === 0) &&
+                                (usersData?.length === 0) &&
                                 <div className="text-muted text-center my-auto">
                                     <p className="">No frontline employees within their first 60 days</p>
                                 </div>
@@ -152,13 +197,81 @@ export default function ReviewDashboard({authUser, supervisor = null, categories
 
     return (
         <div className="p-4">
-            <h4>Review Dashboard</h4>
-            <small className="text-muted">View frontline employees with active and upcoming review milestones</small>
+            <div className="d-flex justify-content-between">
+                <div>
+                    <h4>Review Dashboard</h4>
+                    <small className="text-muted">View frontline employees with active and upcoming review milestones</small>
+                </div>
+                <div className="">
+                    {
+                        loading ? (
+                            <div className="d-flex justify-content-end">
+                                <Placeholder as={Col} animation="wave" md={8}>
+                                    <Placeholder xs={12} className="rounded-2 " size="lg" />
+                                </Placeholder>
+                            </div>
+                        ) : (
+                            <div className="d-flex justify-content-end gap-2 flex-wrap">
+                                {
+                                    reviewStatusData?.total_employees > 0 && 
+                                        <Col md={'auto'} className="px-1">
+                                            <Badge 
+                                                type="total_employees" 
+                                                text={`Total Employees - ${reviewStatusData?.total_employees}`} 
+                                                size="md"
+                                                className="mx-1"
+                                            />
+                                        </Col> 
+                                }
+                                {
+                                    reviewStatusData?.overdue > 0 && 
+                                        <Col md={'auto'} className="px-1">
+                                            <Badge 
+                                                type="overdue" 
+                                                text={`Overdue - ${reviewStatusData?.overdue}`} 
+                                                size="md"
+                                                className="mx-1"
+                                            />
+                                        </Col>   
+                                }
+                                {
+                                    reviewStatusData.ready > 0 &&
+                                        <Col md={'auto'} className="px-1">
+                                            <Badge 
+                                                type="ready_for_review" 
+                                                text={`Ready - ${reviewStatusData?.ready}`} 
+                                                size="md"
+                                                className="mx-1"
+                                            />
+                                        </Col>
+                                }
+                                {
+                                    reviewStatusData.under_five_days > 0 &&
+                                        <Col md={'auto'} className="px-1">
+                                            <Badge 
+                                                type="under_five_days" 
+                                                text={`Within 5 Days - ${reviewStatusData?.under_five_days}`} 
+                                                size="md"
+                                                className="mx-1 px-1"
+                                            />
+                                        </Col>
+                                }
+                            </div>
+                        )
+                    }
+                </div>
+            </div>
+            
             <hr />
 
-            <small className="text-danger">
-                Performance reviews must be submitted within 5 days after review milestone achievement
-            </small>
+            <div className="d-flex justify-content-between">
+                <small className="text-danger">
+                    Performance reviews must be submitted within 5 days after review milestone achievement
+                </small>
+
+
+            </div>
+
 
             {renderPendingReviews()}
         </div>
